@@ -1,0 +1,145 @@
+---
+title: 'KISS or Die: Why Senior Engineers Fail at Startups'
+publishedAt: '2025-11-30'
+summary: 'Senior engineers kill startups by doing exactly what made them senior. $100K in free cloud credits, enterprise experience, "proper" architecture — we had it all. We still failed. Not because we built it wrong. We built it well. That was the problem. Here are the mental models that could have saved us.
+'
+---
+
+My first startup was a failure. Several neighboring startups failed too. We had: $100K in GCP credits, a founding engineer who’d built systems in enterprise, go-to-market. We failed. Not because we built it wrong. We built it well. That was the problem.
+
+While we spent time wrestling with what felt like an “unoptimal” tech stack, we lost the most important thing: time. Momentum. Market opportunity.
+
+This story isn’t about people without common sense. I had common sense. I knew we should keep things simple. But when your mental model doesn’t fit the situation, all your common sense gets swept away. You make “correct” decisions that kill you.
+
+This isn’t a story about bad engineering. It’s about how good engineering kills startups. How the very experience that makes you senior becomes your biggest liability. How “doing it right” or even “doing it simple” is often doing it wrong. 
+
+This article presents mental models to help you make the right decisions and avoid the wrong ones I made.
+
+**Who this is for**: Senior engineers starting or joining early-stage startups. If you’ve spent 5+ years in enterprise or Big Tech, this is your warning.
+
+
+
+## Mental Model #1 - “Free” Infrastructure Is The Most Expensive
+
+$100K in GCP credits seems like a gift, but it’s a trap. It pushes you toward over-engineering because “it’s already paid for.” You get compute instances, load balancers, container registries, enterprise tools that require enterprise setup. What do you need to get? A “push to deploy” button.
+
+Sure, you can build “deploy from GitHub to VM” workflows on GCP/AWS/Azure. Some products come close. But it requires extra steps: configuring Cloud Build, setting up IAM roles, writing deployment scripts, managing secrets, configuring health checks. You burn time building deployment infrastructure before deploying actual products.
+
+Meanwhile, platforms like Railway or Fly.io  give you what startups actually need: a persistent VM with start-and-go deployment from GitHub. Push your code, it deploys. Environment variables? Built-in. SSL certificates? Automatic. Logs? One command. It’s not “free,” but it’s **ready**.
+
+Free credits pushes you toward over-engineering because “it’s already paid for.” You convince yourself you’re saving money while spending your most valuable resource: time.
+
+**THE MENTAL MODEL**
+
+You will spend weeks setting up “proper” infrastructure. Competitors launched in two days on Heroku. They got 1,000 users while we perfected our deployment pipeline. Those users are worth more than $100K. But "free" infrastructure isn't the only trap. Even when you avoid it, there's a deeper problem: how senior engineers think about simplicity itself.
+
+
+## Mental Model #2 - “Minimal” ≠ “Simple”
+
+The traditional KISS principle tells us to keep our software simple. But in startups, that's the wrong target. You shouldn't keep your SOFTWARE simple, you should keep your SOLUTIONS simple.
+
+Real simplicity should be measured by total effort, not code complexity:
+
+__Total Effort = Initial Build + Maintenance + Debugging + Feature Addition + Security Updates + Scaling Changes__
+
+When you build from scratch, you own all of these forever. When you use a service, most of these become zero. The "bloated" third-party service is actually the simple solution because it minimizes total effort.
+
+**OAuth Example**
+
+Our founding engineer decided to build OAuth from scratch instead of using an "unknown library." One week later, he submitted a PR: clean OAuth implementation with JWT tokens, refresh token rotation, session management, and role-based access control. No dependencies, no vendor lock-in, just code we controlled.
+
+I didn't deny the PR. And this was a mistake. Throwing away a week of work would crush morale. But it creates code complexity and puts it on the wrong railways. Plus not discussing the approach beforehand, that was our real mistake. We let engineering pride make a strategic decision.
+
+Then a client needed Microsoft OAuth and Google OAuth. Simple request, right? Wrong. Our custom implementation meant days of refactoring. Refresh token rotation had edge cases we hadn't considered. Each "simple" addition required a deep understanding of our custom auth. Every bug was ours to fix. Every security update was ours to implement. Every new requirement was ours to code.
+
+**The Alternative We Ignored**
+
+With Clerk, the same functionality would have taken 3 hours to integrate. Adding a new OAuth provider? Click a checkbox. 
+With Supabase Auth, role-based access comes out of the box. Both handle refresh tokens, security patches, and edge cases we didn't even know existed.
+
+Classic senior engineer mistake: optimizing for control instead of outcomes.
+
+**THE MENTAL MODEL**
+
+This requires completely inverting how senior engineers think:
+- Stop thinking: "This is just a few days of coding"
+- Start thinking: "This is a few days NOT coding my actual product"
+- Stop thinking: "I can build this simply"
+- Start thinking: "I can solve this simply by not building"
+- Stop thinking: "Third-party services add complexity"
+- Start thinking: "Third-party services absorb complexity"
+
+In startups, KISS means being lazy about everything except your core product. Not lazy in quality, BUT lazy in effort. Because every hour spent rebuilding solved problems is an hour stolen from the unsolved problems that actually determine if your startup lives or dies. This mindset shift is hard enough. But it gets harder when your experience actively works against you, when the tools you've mastered become the tools that slow you down.
+
+
+
+## Mental Model #3 - Comfort choices 
+
+We chose Angular because our founding engineer knew it deeply. Smart decision, right? Use your strengths, ship quality code. The framework was fine, BUT the problem was its ecosystem.
+
+**The Ecosystem Trap**
+
+Angular is excellent. Our engineer could build anything with it. But "anything" took weeks just to start. 
+Setting up deployment, authentication, and basic UI components meant endless configuration before writing a single feature. While we debugged Angular Material themes, competitors using Next.js + Vercel were already onboarding users. 
+Compare that to the Next.js + Vercel path: deploy a skeleton app with npx create-next-app on day one, add Clerk authentication and shadcn/ui components on, ship actual features on day one. Same destination, completely different journey.
+
+**Why this Happens?**
+
+The difference isn't framework quality, it's ecosystem optimization. Next.js/React is surrounded by venture-backed startups building tools for other startups:
+- UI: shadcn/ui - copy, paste, ship
+- Auth: Clerk/Supabase - configure in minutes
+- Deploy: Vercel - git push equals production
+- Everything else: If startups need it, someone built a service
+
+Angular's ecosystem serves enterprises: powerful, flexible, infinitely customizable. Perfect for teams of 50. Poison for teams of 3. 
+
+**THE MENTAL MODEL**
+
+This choice revealed a crucial distinction: 
+
+**Framework Senior**: "I've mastered Angular. I can build anything with it." They optimize for code quality and "proper" engineering practices. Need a data table? They'll spend two weeks building a perfectly abstracted, paginated component -- for your 50 rows of data. Meanwhile, competitors grabbed shadcn's DataTable and shipped to users on day one. 
+**Applied Senior**: "I know Angular, but Next.js ships 3x faster. Let's use that." They optimize for market feedback. They'll load all data client-side because "we won't hit scale for months" and ship with off-the-shelf components. Their code might be forgettable, but they're iterating on feature three while Framework Senior is still perfecting their pagination abstraction. 
+
+The truly senior move? 
+Asking yourself: "__Am I solving tomorrow's problems or today's opportunities?__"
+
+Choosing the right ecosystem matters. But even with the right tools, there's one final trap: the compulsion to build things because you can, not because you should.
+
+
+## Mental Model #4 - Build Core, Rent Context
+
+Here's the trap that kills technically strong teams: building things nobody asked for because you can, not because you should.
+We spent at least a month in total on features nobody needed. Custom OAuth when Auth0 existed. A Postgres-based job queue when Redis + Celery existed. Terraform from day one when the console worked fine. Each decision felt productive but each was self-sabotage to face a real challenges like talking to customers or doing other customer development.
+The pattern is simple: if customers won't choose you for it, don't build it.
+Your competitive advantage lives in exactly one place: the thing users will pay for. That can be your unique algorithm, or your proprietary workflow or your data model. That's core and everything else is context. Not to surprise that the world already solved it.
+
+**The $50 Rule**
+
+If a SaaS costs less than $50/month, you can't afford to build it. Your time is too expensive.
+Building custom OAuth takes 1-2 weeks in total of maintenance and adding different 0Auth providers. At startup burn rates, that's $5,000-$15,000 in engineering time, or in a losing opportunity time. Auth0 is free for up to 25,000 active users, then $35/month. You could pay for Auth0 for 35 years with what it costs to build it once.
+So, this isn't about money but about priorities and opportunity cost. While you're perfecting authentication, your competitors talk to users.
+
+**Exception**
+
+In my opinion, build only if you can't learn about users without it. 
+Need to test if users will pay for AI-generated reports? Build the simplest version that proves demand. Everything else try to slip and be lazy as possible. Skip infrastructure. Skip "doing it right." Skip best practices that don't ship features. 
+
+**What I Actually Use**
+
+Auth: Clerk (React-native, better DX) or Auth0 (B2B-focused, enterprise-ready)
+Email: Resend (developer-first) or SendGrid (battle-tested)
+Analytics: PostHog (free until scale)
+Monitoring: Sentry (unbeatable for errors)
+Hosting: Cloudflare or Vercel (if all-in on Next.js)
+These aren't endorsements but my own choices optimized for speed. I guess your stack will differ but this principle won't.
+
+**THE MENTAL MODEL**
+
+If customers see it and choose you for it, build it. Everything else try to rent, auth, emails, payments, monitoring, whatevert. Your startup won't die from using Auth0, but it will die from spending three weeks building authentication while competitors ship features users want. The most senior engineering decision isn't what to build. It's what not to build.
+
+
+
+## Bottom Line
+LLMs have commoditized building. Any junior with Claude can create that custom auth system you're so proud of. Your value isn't in what you can build anymore, BUT it's in knowing what not to build. 
+
+Leadership is the ability to separate signals from noise. True seniority means having the discipline to ignore 90% of what you know and to ship today's solution, not tomorrow's architecture. 
