@@ -4,17 +4,16 @@ export default function Page() {
   return (
     <main className="max-w-2xl">
       <h1 className="mb-8 text-2xl font-semibold tracking-tight">
-        Hi, I’m Bohdan — engineer, founder and explorer. 
+        Hi, I'm Bohdan, engineer, founder and explorer. 
 
       </h1>
 
       <p className="mb-4">
-I began in corporate engineering and consulting. Later I moved into startups and started building my own products — and the shift changed how I think.
+        I began in corporate engineering and consulting. Later I moved into startups and started building my own products — and the shift changed how I think.
       </p>
 
       <p className="mb-4">
-        In startups, mindset becomes infrastructure. Clarity beats complexity. Pace beats perfection. Decisions beat theory.
-
+        In startups, mindset becomes infrastructure: clarity beats complexity, pace beats perfection and decisions beat theory.
       </p>
 
 
@@ -30,7 +29,7 @@ I began in corporate engineering and consulting. Later I moved into startups and
 
 
       <p className="mt-6 font-medium">
-        If you’re building and thinking long-term — welcome.
+        If you're building and thinking long-term — welcome.
       </p>
 
 

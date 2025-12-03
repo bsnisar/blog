@@ -17,6 +17,18 @@
   --sh-entity: #e25a1c;
 }
 
+@theme inline {
+  --font-sans: var(--font-plex-sans);
+  --font-serif: var(--font-plex-serif);
+  --font-mono: var(--font-plex-mono);
+}
+
+@layer theme {
+  .font-sans { font-family: var(--font-sans); }
+  .font-serif { font-family: var(--font-serif); }
+  .font-mono { font-family: var(--font-mono); }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --sh-class: #4c97f8;
@@ -31,6 +43,8 @@
 
 html {
   min-width: 360px;
+  font-size: 18px; /* previously ~16px */
+  line-height: 1.65;
 }
 
 .prose .anchor {
@@ -129,6 +143,23 @@ pre {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.prose {
+  @apply font-serif;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply font-sans;
+}
+
+.prose code,
+.prose pre {
+  @apply font-mono;
+}
+
 
 /* Remove Safari input shadow on mobile */
 input[type='text'],

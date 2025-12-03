@@ -1,17 +1,35 @@
 import './global.css'
 import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
 import { Navbar } from '@/components/nav'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import {Footer} from '@/components/footer'
 import { baseUrl } from './sitemap'
+import { IBM_Plex_Sans, IBM_Plex_Serif, IBM_Plex_Mono } from 'next/font/google'
+
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plex-sans',
+})
+
+const plexSerif = IBM_Plex_Serif({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plex-serif',
+})
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-plex-mono',
+})
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Bohdan Snisar — Founder, Engineer, AI Architect',
+    default: 'Bohdan Snisar — Founder, Engineer',
     template: '%s | Bohdan Snisar',
   },
   description:
@@ -50,8 +68,9 @@ export default function RootLayout({
       lang="en"
       className={cx(
         'text-black bg-white dark:text-white dark:bg-black',
-        GeistSans.variable,
-        GeistMono.variable
+        plexSans.variable,
+        plexSerif.variable,
+        plexMono.variable
       )}
     >
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">

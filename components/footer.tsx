@@ -10,7 +10,7 @@ export function Footer() {
           rel="noopener noreferrer"
           className="hover:text-neutral-700"
         >
-          ↗ Twitter
+          ↗ X
         </Link>
         <Link
           href="https://www.linkedin.com/in/bsnisar/"
