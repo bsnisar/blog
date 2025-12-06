@@ -1,8 +1,8 @@
 import { baseUrl } from 'app/sitemap'
-import { getBlogPosts } from 'app/blog/utils'
+import { ALL_POSTS } from '../blog/posts.generated'
 
 export async function GET() {
-  let allBlogs = await getBlogPosts()
+  let allBlogs = ALL_POSTS
 
   const itemsXml = allBlogs
     .sort((a, b) => {

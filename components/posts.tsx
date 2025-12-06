@@ -1,8 +1,9 @@
 import Link from 'next/link'
-import { formatDate, getBlogPosts } from 'app/blog/utils'
+import { formatDate } from '@/lib/utils'
+import { ALL_POSTS } from '@/app/blog/posts.generated'
 
 export function BlogPosts() {
-  const posts = getBlogPosts().sort(
+  const posts = ALL_POSTS.sort(
     (a, b) =>
       new Date(b.metadata.publishedAt).getTime() -
       new Date(a.metadata.publishedAt).getTime()
