@@ -5,6 +5,7 @@
     "prebuild": "node --loader ts-node/esm scripts/build-blog-index.mts",
     "build": "next build",
     "start": "next start",
+    "cf:build": "opennextjs-cloudflare build",
     "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf:upload": " opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf:preview": " opennextjs-cloudflare build && opennextjs-cloudflare preview",
