@@ -1,15 +1,19 @@
+import { getBlogPostMetadata ,formatDate } from "@/lib/utils";
+import nextDynamic from "next/dynamic";
+type BlogPageProps = { params: Promise<{ slug: string }> };
 
-import dynamic from "next/dynamic";
-type BlogPageProps = { params: { slug: string } };
-
-
-export default function BlogPage({ params }: BlogPageProps) {
-  const BlogMarkdown = dynamic(() => import("@/blog/posts/" + params.slug + ".mdx"));
-
-  return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-xl">{params.slug}</h2>
+export default async function BlogPage({ params }: BlogPageProps) {
+  const { slug } = await params;
+  const BlogMarkdown = nextDynamic(() => import("@/posts/" + slug + ".mdx"));
+  const {metadata} = await getBlogPostMetadata(slug);
+  return (<>
+    <h1 className="text-2xl font-bold mb-2">{metadata.title}</h1>
+    <p>{formatDate(metadata.publishedAt)}</p>
+    <article className="mt-12 prose lg:prose-lg dark:prose-invert mx-auto py-10">
       <BlogMarkdown />
-    </div>
+    </article>
+    </>
   );
 }
+
+export const dynamicParams = false

@@ -1,7 +1,7 @@
 // blog/utils.ts
+import { notFound } from "next/navigation";
 
-import { readdirSync, readFileSync } from "node:fs";
-import path from "node:path";
+import { ALL_POSTS } from "@/lib/posts-runtime/posts.generated";
 
 export type Metadata = {
   title: string;
@@ -9,9 +9,6 @@ export type Metadata = {
   summary: string;
   image?: string;
 };
-
-
-
 
 // export function getBlogPosts() {
 //   const dir = getPostsDir();
@@ -54,26 +51,50 @@ export function formatDate(date: string, includeRelative = false) {
   return `${fullDate} (${formattedDate})`;
 }
 
-function parseFrontmatter(fileContent: string) {
-  const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  const match = frontmatterRegex.exec(fileContent);
+export type PostMetadata = Metadata & {
+  title: string;
+  description: string;
+};
 
-  if (!match) {
-    throw new Error("Frontmatter block not found");
+export type BlogPostData = {
+  slug: string;
+  metadata: Metadata;
+};
+
+export async function getBlogPostMetadata(slug: string): Promise<BlogPostData> {
+  try {
+    const file = await import("@/posts/" + slug + ".mdx");
+
+    if (file?.metadata) {
+      if (!file.metadata.title || !file.metadata.description) {
+        throw new Error(`Missing some required metadata fields in: ${slug}`);
+      }
+
+      return {
+        slug,
+        metadata: file.metadata,
+      };
+    } else {
+      throw new Error(`Unable to find metadata for ${slug}.mdx`);
+    }
+  } catch (error: any) {
+    console.error(error?.message);
+    return notFound();
   }
-
-  const frontMatterBlock = match[1];
-  const content = fileContent.replace(frontmatterRegex, "").trim();
-  const frontMatterLines = frontMatterBlock.trim().split("\n");
-  const metadata: Partial<Metadata> = {};
-
-  frontMatterLines.forEach((line) => {
-    const [key, ...valueArr] = line.split(": ");
-    let value = valueArr.join(": ").trim();
-    value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value;
-  });
-
-  return { metadata: metadata as Metadata, content };
 }
 
+
+export async function getBlogPosts(): Promise<BlogPostData[]> {
+  const data: BlogPostData[] = [];
+  for (const post of ALL_POSTS) {
+    const { slug, metadata } = await getBlogPostMetadata(post.slug);
+    data.push({ slug, metadata });
+  }
+  data.sort((a, b) => {
+    return (
+      new Date(b.metadata.publishedAt).getTime() -
+      new Date(a.metadata.publishedAt).getTime()
+    );
+  });
+  return data;
+}

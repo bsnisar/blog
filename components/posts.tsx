@@ -1,13 +1,10 @@
-import Link from 'next/link'
-import { formatDate } from '@/lib/utils'
-import { ALL_POSTS } from '@/app/blog/posts.generated'
+"use server";
 
-export function BlogPosts() {
-  const posts = ALL_POSTS.sort(
-    (a, b) =>
-      new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime()
-  )
+import Link from 'next/link'
+import { formatDate, getBlogPosts } from '@/lib/utils'
+
+export async function BlogPosts() {
+  const posts = await getBlogPosts();
 
   return (
     <div className="space-y-10">
