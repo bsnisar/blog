@@ -8,6 +8,9 @@ export type BlogPost = {
 
 export const ALL_POSTS: BlogPost[] = [
   {
+    "slug": "The-Wrapper-Era-Ended-On-A-Contract-Clause"
+  },
+  {
     "slug": "The-Mental-Models-That-Poison-Founders"
   },
   {

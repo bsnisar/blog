@@ -1,0 +1,66 @@
+
+export const metadata = {
+  title: "The wrapper era ended on a contract clause",
+  publishedAt: '2026-08-29',
+  description: "OpenAI cutting Cursor after SpaceX's $60 billion takeover, and Anthropic lining up a trillion-dollar IPO, are not two headlines. They are the same move from different floors — and the application layer is no longer allowed to stay neutral.",
+  series: { slug: 'opinionated-ai', part: 1 },
+  tags: ['Startups', 'Deals', 'Trends'],
+};
+
+<Lede>
+OpenAI cutting Cursor after SpaceX's $60 billion takeover, and Anthropic lining up a trillion-dollar IPO, are not two headlines. They are the same move from different floors: model, compute, and distribution collapsing into a few full-stack empires. The application layer is no longer allowed to stay neutral.
+
+Cursor was the proof you could build a historic company without owning the model. Two weeks after it joined SpaceX, OpenAI finished the sentence. If you do not own the model, you do not own the decision.
+</Lede>
+
+## 01 — What happened
+
+On 28 August, OpenAI told SpaceX it will wind down the contract that supplies OpenAI models into Cursor. Proposed cutoff: 12 November 2026. Future models, including the next flagship family Astra, will not go to Cursor at all.
+
+The reason they wrote down is not "they became a competitor." It is trust. OpenAI says it cannot be confident SpaceX will stay inside its terms of service. It cites two priors: X after Musk's takeover allegedly breaking an OpenAI contract, and Musk admitting under oath earlier this year that xAI violated OpenAI's terms. Astra raises the stakes, OpenAI says, because the company now has a higher duty to control how the next model is used at scale.
+
+The deal underneath that letter closed on 14 August: SpaceX's all-stock $60 billion purchase of Anysphere. Cursor now sits inside SpaceXAI, next to Grok and Colossus.
+
+The shrugs arrived on schedule. Cursor co-founder Michael Truell said OpenAI models are about 5% of user traffic and that talks are still happening. Anthropic co-founder Tom Brown said Cursor has been a partner since Sonnet 3.5 and Anthropic will increase compute for Claude inside Cursor. Musk: "I couldn't care less."
+
+Developers are not fully locked out of GPT in the editor. Bring-your-own-key still works for some local chat and agent features, as does the Codex IDE extension. The official Cursor-routed pipe — Tab, cloud agents, CLI, API — is what dies. That distinction is how OpenAI can sound developer-friendly while still yanking the product integration.
+
+## 02 — What it actually means
+
+If OpenAI is 5% of traffic, this is not a product emergency tomorrow morning. Claude already owns a lot of the coding mindshare. Grok and first-party models will eat more of the rest. SpaceX did not pay $60 billion for a GPT reseller.
+
+What OpenAI cut is optionality and the next generation. Cursor's original miracle was one pane of glass and many brains. That required labs to treat Cursor as infrastructure rather than as a rival surface. The moment it sat inside a company training competing models on a giant GPU pile — with a documented habit of treating other labs' outputs as training data — the infrastructure story was over.
+
+OpenAI used the change-of-control window instead of waiting for a messy fight after Astra ships. That is legally clean and strategically obvious. Anthropic's "we'll add compute" is the same logic with better manners. They are not rescuing neutrality. They are locking the largest remaining coding front-end into Claude while OpenAI pushes Codex as its own surface.
+
+This is also not a new genre. Labs have been teaching the industry the same lesson for a year: if your product is a pipe, the pipe owner can kink it.
+
+> The convenient story is a feud. The real story is that model-agnostic was a launch tactic, not a moat.
+
+## 03 — The other half
+
+While OpenAI sent the letter, Anthropic was preparing to publish an IPO prospectus after Labor Day, with a possible listing in late September or early October. Confidential filing was June, after a $65 billion Series H at a $965 billion valuation. The ask now being whispered is $1.5–2 trillion, a raise that could beat SpaceX's own 2026 IPO. They are even considering letting existing holders sell in the offering, with longer lockups to manage the overhang.
+
+The operating picture is violent in both directions. Preliminary Q2 revenue around $11.5 billion. ARR near $65 billion by late July. A roughly $42 billion net loss in 2025. Internal 2028 revenue pitched around $190–200 billion. That is not a software company going public. That is a compute budget wearing an S-1.
+
+Put the two events on one table and the strategy rhymes. SpaceX went public, swallowed xAI, bought Cursor, and is trying to own compute, model, and the product engineers open every day. OpenAI answered by refusing to be the factory for that product. Anthropic answered by becoming the remaining open pipe — and by going public so it can fund the stack without living quarter to quarter on private mega-rounds.
+
+This is the peak fund war. H1 2026 global startup funding hit about $510 billion. OpenAI and Anthropic alone took roughly $217 billion — about 43% of every startup dollar on Earth. Deal count fell while check size exploded. Ordinary venture is becoming marginal at the frontier. The scarce things are no longer a clever wrapper or a seed round. They are watts that do not get rented out from under you, a balance sheet that can lose $40 billion a year and keep training, and a surface with daily habit.
+
+If you are an application founder, the uncomfortable reading is simple. Labs will sell you API until you become distribution they cannot control. Then the change-of-control clause, the safety memo, and the "we have our own client now" post arrive in the same week.
+
+## 04 — What to watch
+
+The person who lost the old deal is the developer who liked one editor and three brains. That product is being reorganized into tribes: OpenAI / Codex, Anthropic / Claude / Cursor-as-Claude-client, SpaceXAI / Grok / Cursor-as-Grok-client. You can still mix them with keys and extensions. You will do more of that work yourself. Neutrality is now a user preference, not a vendor promise.
+
+Watch the tests, not the press releases.
+
+1. Whether Cursor's enterprise retention holds once GPT is a second-class citizen and Grok is the house blend.
+2. Whether Anthropic's S-1 makes Cursor look like a strategic channel or just another logo on the customer page.
+3. Whether OpenAI's next move is more cutoffs — any surface that looks like it will be acquired by a lab — or a real multi-model truce while they ship Astra.
+
+The unified news is not "OpenAI beefs Musk again" and "Anthropic might IPO." The unified news is that the wrapper era peaked, the labs are going full-stack, and the funding war is now about who can afford to own the whole stack after the wrapper gets acquired.
+
+<Coda next="Who still gets to be model-agnostic after November 12.">
+News is the event. The opinion is who just lost optionality.
+</Coda>

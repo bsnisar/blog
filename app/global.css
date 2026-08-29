@@ -1,19 +1,281 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
-::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+/* ============================================================
+   QUIET SWISS — design tokens
+   Hierarchy from size, weight and space. Never from colour.
+   ============================================================ */
+
+@theme {
+  /* -- type ------------------------------------------------ */
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
+
+  --text-label: 0.75rem;      /* 12 — mono labels, dates, tags   */
+  --text-label--line-height: 1.5;
+  --text-small: 0.8125rem;    /* 13 — footnotes, table cells     */
+  --text-small--line-height: 1.55;
+  --text-caption: 0.9375rem;  /* 15 — summaries, captions        */
+  --text-caption--line-height: 1.55;
+  --text-body: 1.0625rem;     /* 17 — running text               */
+  --text-body--line-height: 1.65;
+  --text-title: 1.25rem;      /* 20 — post-list titles, lead     */
+  --text-title--line-height: 1.3;
+  --text-h2: 1.5rem;          /* 24 */
+  --text-h2--line-height: 1.25;
+  --text-h1: 2rem;            /* 32 — article title              */
+  --text-h1--line-height: 1.12;
+  --text-display: 2.75rem;    /* 44 — page display, the ceiling  */
+  --text-display--line-height: 1.05;
+
+  --tracking-display: -0.035em;
+  --tracking-h1: -0.03em;
+  --tracking-h2: -0.02em;
+  --tracking-title: -0.015em;
+  --tracking-label: 0.1em;
+
+  /* -- colour ---------------------------------------------- */
+  --color-paper: #fbfbfa;
+  --color-raised: #f3f3f1;
+  --color-ink: #14161a;
+  --color-muted: #6b7078;
+  --color-faint: #9aa0a6;
+  --color-rule: #e4e4e1;
+  --color-hair: #efefec;
+  --color-accent: #c0292f;
+
+  /* -- measure & grid -------------------------------------- */
+  --container-shell: 43rem;   /* 688 — page container           */
+  --container-measure: 65ch;  /* prose measure                  */
+  --rail: 9.25rem;            /* 148 — mono label / date column */
 }
 
-:root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-string: #007f7a;
-  --sh-keyword: #e02518;
-  --sh-comment: #a19595;
-  --sh-jsxliterals: #6266d1;
-  --sh-property: #e25a1c;
-  --sh-entity: #e25a1c;
+/* Dark is a deliberate second set, not an inversion: ink stops
+   short of white, and the accent lifts so it holds on near-black. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #0e1012;
+    --color-raised: #16191c;
+    --color-ink: #ededea;
+    --color-muted: #8e949c;
+    --color-faint: #6c7278;
+    --color-rule: #25282c;
+    --color-hair: #1c1f23;
+    --color-accent: #f0625c;
+  }
+}
+
+/* ============================================================
+   Base — MDX renders through these, so posts need no classes.
+   ============================================================ */
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  /* Keep the root at the browser default so 1rem stays 16px and the
+     type scale lands on its literal pixel values. Body sets the
+     reading size; it is not the root size. */
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    text-wrap: balance;
+  }
+}
+
+/* ============================================================
+   Article — the one place we style descendants, because MDX
+   output carries no classes of its own.
+
+   Layered as components so a utility class on an element inside
+   .article still wins; unlayered rules would outrank every utility.
+   ============================================================ */
+
+@layer components {
+  .article {
+    max-width: var(--container-measure);
+  }
+
+  .article > * + * {
+    margin-top: --spacing(6);
+  }
+
+  .article h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--tracking-h2);
+    margin-top: --spacing(12);
+  }
+
+  .article h3 {
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--tracking-title);
+    margin-top: --spacing(10);
+  }
+
+  .article a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .article strong {
+    font-weight: 600;
+  }
+
+  .article ul,
+  .article ol {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .article li + li {
+    margin-top: --spacing(2);
+  }
+
+  .article ul > li {
+    position: relative;
+    padding-left: --spacing(6);
+  }
+
+  /* A flat rule, not a bullet — the same hairline used everywhere else. */
+  .article ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 8px;
+    height: 1px;
+    background-color: var(--color-faint);
+  }
+
+  .article ol {
+    counter-reset: item;
+  }
+
+  .article ol > li {
+    position: relative;
+    padding-left: --spacing(8);
+    counter-increment: item;
+  }
+
+  .article ol > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    color: var(--color-faint);
+  }
+
+  .article :is(.lede, .coda) > * + * {
+    margin-top: --spacing(4);
+  }
+
+  .article :is(.lede, .coda) p {
+    line-height: 1.5;
+  }
+
+  .article blockquote {
+    border-left: 2px solid var(--color-ink);
+    padding-left: --spacing(6);
+    font-size: var(--text-title);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+
+  .article blockquote p + p {
+    margin-top: --spacing(4);
+  }
+
+  .article hr {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+    margin-block: --spacing(12);
+  }
+
+  .article code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-rule);
+    padding: 0.1em 0.35em;
+  }
+
+  .article pre {
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-rule);
+    padding: --spacing(4);
+    overflow-x: auto;
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  .article pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  .article img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .article table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+  }
+
+  .article th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    border-bottom: 1px solid var(--color-ink);
+    padding: 0 --spacing(4) --spacing(2) 0;
+  }
+
+  .article td {
+    border-bottom: 1px solid var(--color-hair);
+    padding: --spacing(3) --spacing(4) --spacing(3) 0;
+    vertical-align: top;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
