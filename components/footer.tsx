@@ -1,11 +1,7 @@
 import Link from 'next/link'
+import { SOCIAL } from '@/lib/social'
 
-const links = [
-  { href: 'https://x.com/BSnisar', label: 'X' },
-  { href: 'https://www.linkedin.com/in/bsnisar/', label: 'LinkedIn' },
-  { href: 'https://github.com/bsnisar', label: 'GitHub' },
-  { href: '/rss', label: 'RSS' },
-]
+const links = [...SOCIAL, { href: '/rss', label: 'RSS' }]
 
 export function Footer() {
   return (

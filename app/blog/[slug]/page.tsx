@@ -10,6 +10,7 @@ import {
 import { getSeries } from '@/lib/series'
 import { SeriesBadge, SeriesNav } from '@/components/series-parts'
 import { TagList } from '@/components/tag-list'
+import { FollowBlock } from '@/components/follow'
 import { baseUrl } from '@/app/sitemap'
 
 type BlogPageProps = { params: Promise<{ slug: string }> }
@@ -108,6 +109,8 @@ export default async function BlogPage({ params }: BlogPageProps) {
       </div>
 
       {seriesContext ? <SeriesNav context={seriesContext} /> : null}
+
+      <FollowBlock />
     </article>
   )
 }
