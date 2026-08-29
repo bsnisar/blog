@@ -1,40 +1,34 @@
-"use server";
-
 import Link from 'next/link'
-import { formatDate, getBlogPosts } from '@/lib/utils'
+import { formatDateNumeric, getBlogPosts } from '@/lib/utils'
 
 export async function BlogPosts() {
-  const posts = await getBlogPosts();
+  const posts = await getBlogPosts()
 
   return (
-    <div className="space-y-10">
+    <ul className="flex flex-col">
       {posts.map((post) => (
-        <Link
-          key={post.slug}
-          href={`/blog/${post.slug}`}
-          className="group block"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-2 md:gap-8">
-            {/* Left column – Date */}
-            <div className="text-neutral-500 dark:text-neutral-400 text-sm tabular-nums leading-relaxed">
-              {formatDate(post.metadata.publishedAt, false)}
-            </div>
+        <li key={post.slug} className="border-b border-hair last:border-0">
+          <Link href={`/blog/${post.slug}`} className="group block py-6">
+            <div className="grid gap-2 sm:grid-cols-[var(--rail)_minmax(0,1fr)] sm:gap-8">
+              <time
+                dateTime={post.metadata.publishedAt}
+                className="font-mono text-label tabular-nums text-muted sm:pt-1"
+              >
+                {formatDateNumeric(post.metadata.publishedAt)}
+              </time>
 
-            {/* Right column – Title + summary */}
-            <div>
-              <h2 className="text-xl font-medium text-neutral-900 dark:text-neutral-100 group-hover:underline underline-offset-4 decoration-neutral-400/50">
-                {post.metadata.title}
-              </h2>
-
-              {post.metadata.summary && (
-                <p className="mt-2 text-neutral-700 dark:text-neutral-300 leading-snug text-sm">
-                  {post.metadata.summary}
+              <div>
+                <h2 className="text-title font-medium tracking-title text-ink underline-offset-4 group-hover:underline">
+                  {post.metadata.title}
+                </h2>
+                <p className="mt-2 max-w-measure text-caption text-muted">
+                  {post.metadata.description}
                 </p>
-              )}
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }

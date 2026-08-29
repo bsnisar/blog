@@ -1,4 +1,3 @@
-// blog/utils.ts
 import { notFound } from "next/navigation";
 
 import { ALL_POSTS } from "@/lib/posts-runtime/posts.generated";
@@ -6,37 +5,13 @@ import { ALL_POSTS } from "@/lib/posts-runtime/posts.generated";
 export type Metadata = {
   title: string;
   publishedAt: string;
-  summary: string;
+  description: string;
   image?: string;
 };
 
-// export function getBlogPosts() {
-//   const dir = getPostsDir();
-//   return getMDXData(dir);
-// }
-
+/** Long form, for prose: "December 3, 2025". */
 export function formatDate(date: string, includeRelative = false) {
-  const currentDate = new Date();
-  if (!date.includes("T")) {
-    date = `${date}T00:00:00`;
-  }
-  const targetDate = new Date(date);
-
-  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  const daysAgo = currentDate.getDate() - targetDate.getDate();
-
-  let formattedDate = "";
-
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}y ago`;
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}mo ago`;
-  } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}d ago`;
-  } else {
-    formattedDate = "Today";
-  }
+  const targetDate = toDate(date);
 
   const fullDate = targetDate.toLocaleString("en-us", {
     month: "long",
@@ -48,13 +23,38 @@ export function formatDate(date: string, includeRelative = false) {
     return fullDate;
   }
 
-  return `${fullDate} (${formattedDate})`;
+  const currentDate = new Date();
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  const daysAgo = currentDate.getDate() - targetDate.getDate();
+
+  let relative = "Today";
+  if (yearsAgo > 0) {
+    relative = `${yearsAgo}y ago`;
+  } else if (monthsAgo > 0) {
+    relative = `${monthsAgo}mo ago`;
+  } else if (daysAgo > 0) {
+    relative = `${daysAgo}d ago`;
+  }
+
+  return `${fullDate} (${relative})`;
 }
 
-export type PostMetadata = Metadata & {
-  title: string;
-  description: string;
-};
+/**
+ * Short form, for the mono rail: "2025.12.03".
+ * Tabular by construction — every date is the same width.
+ */
+export function formatDateNumeric(date: string) {
+  const target = toDate(date);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${target.getFullYear()}.${pad(target.getMonth() + 1)}.${pad(
+    target.getDate()
+  )}`;
+}
+
+function toDate(date: string) {
+  return new Date(date.includes("T") ? date : `${date}T00:00:00`);
+}
 
 export type BlogPostData = {
   slug: string;
@@ -64,37 +64,37 @@ export type BlogPostData = {
 export async function getBlogPostMetadata(slug: string): Promise<BlogPostData> {
   try {
     const file = await import("@/posts/" + slug + ".mdx");
+    const metadata = file?.metadata;
 
-    if (file?.metadata) {
-      if (!file.metadata.title || !file.metadata.description) {
-        throw new Error(`Missing some required metadata fields in: ${slug}`);
-      }
-
-      return {
-        slug,
-        metadata: file.metadata,
-      };
-    } else {
+    if (!metadata) {
       throw new Error(`Unable to find metadata for ${slug}.mdx`);
     }
-  } catch (error: any) {
-    console.error(error?.message);
+
+    // Posts have been written with `description`; the starter read `summary`.
+    // Accept either so older posts keep working.
+    const description = metadata.description ?? metadata.summary;
+
+    if (!metadata.title || !metadata.publishedAt || !description) {
+      throw new Error(
+        `Missing required metadata (title, publishedAt, description) in: ${slug}`
+      );
+    }
+
+    return { slug, metadata: { ...metadata, description } };
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error);
     return notFound();
   }
 }
 
-
 export async function getBlogPosts(): Promise<BlogPostData[]> {
-  const data: BlogPostData[] = [];
-  for (const post of ALL_POSTS) {
-    const { slug, metadata } = await getBlogPostMetadata(post.slug);
-    data.push({ slug, metadata });
-  }
-  data.sort((a, b) => {
-    return (
+  const posts = await Promise.all(
+    ALL_POSTS.map((post) => getBlogPostMetadata(post.slug))
+  );
+
+  return posts.sort(
+    (a, b) =>
       new Date(b.metadata.publishedAt).getTime() -
       new Date(a.metadata.publishedAt).getTime()
-    );
-  });
-  return data;
+  );
 }

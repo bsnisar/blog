@@ -1,41 +1,32 @@
 import Link from 'next/link'
 
+const links = [
+  { href: 'https://x.com/BSnisar', label: 'X' },
+  { href: 'https://www.linkedin.com/in/bsnisar/', label: 'LinkedIn' },
+  { href: 'https://github.com/bsnisar', label: 'GitHub' },
+  { href: '/rss', label: 'RSS' },
+]
+
 export function Footer() {
   return (
-    <footer className="mb-16 mt-20 text-sm text-neutral-500">
-      <div className="flex flex-wrap gap-4">
-        <Link
-          href="https://x.com/BSnisar"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-neutral-700"
-        >
-          ↗ X
-        </Link>
-        <Link
-          href="https://www.linkedin.com/in/bsnisar/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-neutral-700"
-        >
-          ↗ LinkedIn
-        </Link>
-        <Link
-          href="https://github.com/bsnisar"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-neutral-700"
-        >
-          ↗ GitHub
-        </Link>
-        <Link href="/blog" className="hover:text-neutral-700">
-          ↗ Blog
-        </Link>
+    <footer className="mt-24 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 border-t border-rule pt-4 font-mono text-label tracking-label uppercase text-muted">
+      <div className="flex flex-wrap gap-6">
+        {links.map(({ href, label }) => {
+          const external = href.startsWith('http')
+          return (
+            <Link
+              key={href}
+              href={href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+              className="transition-colors hover:text-ink"
+            >
+              {label}
+            </Link>
+          )
+        })}
       </div>
-
-      <p className="mt-4">
-        © {new Date().getFullYear()} Bohdan Snisar — All Rights Reserved
-      </p>
+      <p>© {new Date().getFullYear()} Bohdan Snisar</p>
     </footer>
   )
 }

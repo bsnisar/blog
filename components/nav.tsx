@@ -1,35 +1,50 @@
-import Link from 'next/link'
+'use client'
 
-const navItems = {
-  '/': { name: 'Home' },
-  '/blog': { name: 'Blog' },
-  'https://www.linkedin.com/in/bsnisar/': { name: 'Contact' },
-}
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/blog', label: 'Blog' },
+  { href: 'https://www.linkedin.com/in/bsnisar/', label: 'Contact' },
+]
 
 export function Navbar() {
+  const pathname = usePathname()
+
   return (
-    <aside className="-ml-[8px] mb-16 tracking-tight">
-      <div className="lg:sticky lg:top-20">
-        <nav
-          className="flex flex-row items-start relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
-          id="nav"
-        >
-          <div className="flex flex-row space-x-0 pr-10">
-            {Object.entries(navItems).map(([path, { name }]) => (
-              <Link
-                key={path}
-                href={path}
-                target={path.startsWith('http') ? '_blank' : '_self'}
-                rel={path.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="capitalize transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2 m-1"
-              >
-                {name}
-              </Link>
-            ))}
-          </div>
-        </nav>
-      </div>
-    </aside>
+    <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule pb-3">
+      <Link
+        href="/"
+        className="text-caption font-semibold tracking-title text-ink"
+      >
+        Bohdan Snisar
+      </Link>
+
+      <nav className="flex gap-6 text-small">
+        {navItems.map(({ href, label }) => {
+          const external = href.startsWith('http')
+          const current =
+            !external && (href === '/' ? pathname === '/' : pathname.startsWith(href))
+
+          return (
+            <Link
+              key={href}
+              href={href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+              aria-current={current ? 'page' : undefined}
+              className={
+                current
+                  ? 'text-ink shadow-[inset_0_-1px_0_var(--color-accent)]'
+                  : 'text-muted transition-colors hover:text-ink'
+              }
+            >
+              {label}
+            </Link>
+          )
+        })}
+      </nav>
+    </header>
   )
 }
-
