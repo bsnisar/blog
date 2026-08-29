@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { formatPart, type SeriesContext } from '@/lib/utils'
-import type { Series } from '@/lib/series'
+import { unitLabel, type Series } from '@/lib/series'
 
 /** The line above a post title: which arc it belongs to, and where in it. */
 export function SeriesBadge({
@@ -22,7 +22,7 @@ export function SeriesBadge({
       </Link>
       <span aria-hidden> · </span>
       <span>
-        Part {formatPart(part)} of {formatPart(total)}
+        {unitLabel(series)} {formatPart(part)} of {formatPart(total)}
       </span>
     </p>
   )
@@ -38,7 +38,7 @@ export function SeriesMarker({
 }) {
   return (
     <p className="font-mono text-label tracking-label uppercase text-muted">
-      {series.title} · {formatPart(part)}
+      {series.title} · {unitLabel(series)} {formatPart(part)}
     </p>
   )
 }
@@ -66,11 +66,18 @@ export function SeriesNav({ context }: { context: SeriesContext }) {
 
       <div className="mt-6 grid gap-8 sm:grid-cols-2">
         {previous ? (
-          <SeriesLink post={previous} direction="Previous" />
+          <SeriesLink post={previous} series={series} direction="Previous" />
         ) : (
           <div aria-hidden />
         )}
-        {next ? <SeriesLink post={next} direction="Next" align="right" /> : null}
+        {next ? (
+          <SeriesLink
+            post={next}
+            series={series}
+            direction="Next"
+            align="right"
+          />
+        ) : null}
       </div>
     </nav>
   )
@@ -78,10 +85,12 @@ export function SeriesNav({ context }: { context: SeriesContext }) {
 
 function SeriesLink({
   post,
+  series,
   direction,
   align = 'left',
 }: {
   post: NonNullable<SeriesContext['previous']>
+  series: Series
   direction: 'Previous' | 'Next'
   align?: 'left' | 'right'
 }) {
@@ -93,7 +102,7 @@ function SeriesLink({
         }`}
       >
         {direction === 'Previous' ? '← ' : ''}
-        Part {formatPart(post.metadata.series!.part)}
+        {unitLabel(series)} {formatPart(post.metadata.series!.part)}
         {direction === 'Next' ? ' →' : ''}
       </span>
       <span

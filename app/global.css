@@ -108,154 +108,167 @@
 /* ============================================================
    Article — the one place we style descendants, because MDX
    output carries no classes of its own.
+
+   Layered as components so a utility class on an element inside
+   .article still wins; unlayered rules would outrank every utility.
    ============================================================ */
 
-.article {
-  max-width: var(--container-measure);
-}
+@layer components {
+  .article {
+    max-width: var(--container-measure);
+  }
 
-.article > * + * {
-  margin-top: --spacing(6);
-}
+  .article > * + * {
+    margin-top: --spacing(6);
+  }
 
-.article h2 {
-  font-size: var(--text-h2);
-  line-height: var(--text-h2--line-height);
-  letter-spacing: var(--tracking-h2);
-  margin-top: --spacing(12);
-}
+  .article h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--tracking-h2);
+    margin-top: --spacing(12);
+  }
 
-.article h3 {
-  font-size: var(--text-title);
-  line-height: var(--text-title--line-height);
-  letter-spacing: var(--tracking-title);
-  margin-top: --spacing(10);
-}
+  .article h3 {
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--tracking-title);
+    margin-top: --spacing(10);
+  }
 
-.article a {
-  color: var(--color-accent);
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
-}
+  .article a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
 
-.article strong {
-  font-weight: 600;
-}
+  .article strong {
+    font-weight: 600;
+  }
 
-.article ul,
-.article ol {
-  padding-left: 0;
-  list-style: none;
-}
+  .article ul,
+  .article ol {
+    padding-left: 0;
+    list-style: none;
+  }
 
-.article li + li {
-  margin-top: --spacing(2);
-}
+  .article li + li {
+    margin-top: --spacing(2);
+  }
 
-.article ul > li {
-  position: relative;
-  padding-left: --spacing(6);
-}
+  .article ul > li {
+    position: relative;
+    padding-left: --spacing(6);
+  }
 
-/* A flat rule, not a bullet — the same hairline used everywhere else. */
-.article ul > li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.72em;
-  width: 8px;
-  height: 1px;
-  background-color: var(--color-faint);
-}
+  /* A flat rule, not a bullet — the same hairline used everywhere else. */
+  .article ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 8px;
+    height: 1px;
+    background-color: var(--color-faint);
+  }
 
-.article ol {
-  counter-reset: item;
-}
+  .article ol {
+    counter-reset: item;
+  }
 
-.article ol > li {
-  position: relative;
-  padding-left: --spacing(8);
-  counter-increment: item;
-}
+  .article ol > li {
+    position: relative;
+    padding-left: --spacing(8);
+    counter-increment: item;
+  }
 
-.article ol > li::before {
-  content: counter(item, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  color: var(--color-faint);
-}
+  .article ol > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    color: var(--color-faint);
+  }
 
-.article blockquote {
-  border-left: 2px solid var(--color-ink);
-  padding-left: --spacing(6);
-  font-size: var(--text-title);
-  line-height: 1.5;
-  letter-spacing: -0.01em;
-}
+  .article :is(.lede, .coda) > * + * {
+    margin-top: --spacing(4);
+  }
 
-.article blockquote p + p {
-  margin-top: --spacing(4);
-}
+  .article :is(.lede, .coda) p {
+    line-height: 1.5;
+  }
 
-.article hr {
-  border: 0;
-  border-top: 1px solid var(--color-rule);
-  margin-block: --spacing(12);
-}
+  .article blockquote {
+    border-left: 2px solid var(--color-ink);
+    padding-left: --spacing(6);
+    font-size: var(--text-title);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
 
-.article code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  background-color: var(--color-raised);
-  border: 1px solid var(--color-rule);
-  padding: 0.1em 0.35em;
-}
+  .article blockquote p + p {
+    margin-top: --spacing(4);
+  }
 
-.article pre {
-  background-color: var(--color-raised);
-  border: 1px solid var(--color-rule);
-  padding: --spacing(4);
-  overflow-x: auto;
-  font-size: var(--text-small);
-  line-height: 1.6;
-}
+  .article hr {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+    margin-block: --spacing(12);
+  }
 
-.article pre code {
-  background: none;
-  border: 0;
-  padding: 0;
-  font-size: inherit;
-}
+  .article code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-rule);
+    padding: 0.1em 0.35em;
+  }
 
-.article img {
-  max-width: 100%;
-  height: auto;
-}
+  .article pre {
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-rule);
+    padding: --spacing(4);
+    overflow-x: auto;
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
 
-.article table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-small);
-}
+  .article pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+  }
 
-.article th {
-  text-align: left;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--color-muted);
-  border-bottom: 1px solid var(--color-ink);
-  padding: 0 --spacing(4) --spacing(2) 0;
-}
+  .article img {
+    max-width: 100%;
+    height: auto;
+  }
 
-.article td {
-  border-bottom: 1px solid var(--color-hair);
-  padding: --spacing(3) --spacing(4) --spacing(3) 0;
-  vertical-align: top;
+  .article table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+  }
+
+  .article th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    border-bottom: 1px solid var(--color-ink);
+    padding: 0 --spacing(4) --spacing(2) 0;
+  }
+
+  .article td {
+    border-bottom: 1px solid var(--color-hair);
+    padding: --spacing(3) --spacing(4) --spacing(3) 0;
+    vertical-align: top;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

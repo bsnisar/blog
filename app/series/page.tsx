@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { unitLabel } from '@/lib/series'
 import { getPublishedSeries } from '@/lib/utils'
 
 export const metadata = {
@@ -22,8 +23,7 @@ export default async function SeriesIndex() {
           <li key={entry.slug} className="group border-b border-hair py-6">
             <div className="grid gap-2 sm:grid-cols-[var(--rail)_minmax(0,1fr)] sm:gap-8">
               <p className="font-mono text-label tracking-label uppercase tabular-nums text-muted sm:pt-1">
-                {entry.posts.length}{' '}
-                {entry.posts.length === 1 ? 'part' : 'parts'}
+                {entry.posts.length} {unitLabel(entry, entry.posts.length)}
               </p>
 
               <div>

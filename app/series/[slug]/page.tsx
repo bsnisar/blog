@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PostList } from '@/components/posts'
-import { getSeries, SERIES } from '@/lib/series'
+import { getSeries, SERIES, unitLabel } from '@/lib/series'
 import { getSeriesPosts } from '@/lib/utils'
 import { baseUrl } from '@/app/sitemap'
 
@@ -64,7 +64,7 @@ export default async function SeriesPage({ params }: SeriesPageProps) {
       <div className="mt-12 flex items-baseline justify-between border-b border-ink pb-3 font-mono text-label tracking-label uppercase text-muted">
         <span>In order</span>
         <span>
-          {posts.length} {posts.length === 1 ? 'part' : 'parts'}
+          {posts.length} {unitLabel(series, posts.length)}
         </span>
       </div>
 

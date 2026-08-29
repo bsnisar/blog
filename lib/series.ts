@@ -15,7 +15,17 @@ export type Series = {
   slug: string;
   title: string;
   description: string;
+  /**
+   * What one entry is called. A dispatch has issues; an argument has parts.
+   * Pluralised by suffixing "s", which is all these words need.
+   */
+  unit?: string;
 };
+
+export function unitLabel(series: Series, count = 1) {
+  const unit = series.unit ?? "Part";
+  return count === 1 ? unit : `${unit}s`;
+}
 
 export const SERIES: Series[] = [
   {
@@ -23,6 +33,7 @@ export const SERIES: Series[] = [
     title: "Opinionated AI",
     description:
       "Strong positions on building with LLMs — what the tooling gets wrong, what actually survives contact with production, and what I would not build again.",
+    unit: "Issue",
   },
   {
     slug: "founder-mental-models",

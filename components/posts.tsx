@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getSeries } from '@/lib/series'
+import { getSeries, unitLabel } from '@/lib/series'
 import {
   formatDateNumeric,
   formatPart,
@@ -38,9 +38,9 @@ export function PostList({
           >
             <div className="grid gap-2 sm:grid-cols-[var(--rail)_minmax(0,1fr)] sm:gap-8">
               <div className="font-mono text-label tabular-nums text-muted sm:pt-1">
-                {rail === 'part' && post.metadata.series ? (
+                {rail === 'part' && series && post.metadata.series ? (
                   <span className="tracking-label uppercase">
-                    Part {formatPart(post.metadata.series.part)}
+                    {unitLabel(series)} {formatPart(post.metadata.series.part)}
                   </span>
                 ) : (
                   <time dateTime={post.metadata.publishedAt}>
