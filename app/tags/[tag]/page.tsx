@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { PostList } from '@/components/posts'
 import { getAllTags, getPostsByTag } from '@/lib/utils'
 import { baseUrl } from '@/app/sitemap'
+import { alternates } from '@/lib/metadata'
 
 type TagPageProps = { params: Promise<{ tag: string }> }
 
@@ -31,7 +32,7 @@ export async function generateMetadata({
   return {
     title: tag.label,
     description,
-    alternates: { canonical: url },
+    alternates: alternates(url),
     openGraph: {
       title: tag.label,
       description,

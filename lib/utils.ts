@@ -87,46 +87,80 @@ export type BlogPostData = {
   metadata: Metadata;
 };
 
+/**
+ * Read and validate one post. Throws a Error naming the file and the
+ * problem — never notFound(), so a malformed post fails the build with a
+ * message that points at the post rather than at whichever route happened
+ * to read it first.
+ */
+async function readPost(slug: string): Promise<BlogPostData> {
+  let file: { metadata?: Record<string, unknown> };
+
+  try {
+    file = await import("@/posts/" + slug + ".mdx");
+  } catch {
+    throw new Error(`posts/${slug}.mdx could not be imported.`);
+  }
+
+  const metadata = file?.metadata as Partial<Metadata> & {
+    summary?: string;
+  };
+
+  if (!metadata) {
+    throw new Error(
+      `posts/${slug}.mdx exports no \`metadata\`. Every post needs ` +
+        `title, publishedAt and description.`
+    );
+  }
+
+  // Posts have been written with `description`; the starter read `summary`.
+  // Accept either so older posts keep working.
+  const description = metadata.description ?? metadata.summary;
+
+  const missing = [
+    !metadata.title && "title",
+    !metadata.publishedAt && "publishedAt",
+    !description && "description",
+  ].filter(Boolean);
+
+  if (missing.length > 0) {
+    throw new Error(
+      `posts/${slug}.mdx is missing required metadata: ${missing.join(", ")}.`
+    );
+  }
+
+  if (metadata.series && !getSeries(metadata.series.slug)) {
+    throw new Error(
+      `posts/${slug}.mdx references unknown series ` +
+        `"${metadata.series.slug}". Add it to lib/series.ts.`
+    );
+  }
+
+  return {
+    slug,
+    metadata: { ...metadata, description, tags: metadata.tags ?? [] },
+  } as BlogPostData;
+}
+
+/**
+ * For the post route: an unreadable slug is a 404 for that URL alone.
+ */
 export async function getBlogPostMetadata(slug: string): Promise<BlogPostData> {
   try {
-    const file = await import("@/posts/" + slug + ".mdx");
-    const metadata = file?.metadata;
-
-    if (!metadata) {
-      throw new Error(`Unable to find metadata for ${slug}.mdx`);
-    }
-
-    // Posts have been written with `description`; the starter read `summary`.
-    // Accept either so older posts keep working.
-    const description = metadata.description ?? metadata.summary;
-
-    if (!metadata.title || !metadata.publishedAt || !description) {
-      throw new Error(
-        `Missing required metadata (title, publishedAt, description) in: ${slug}`
-      );
-    }
-
-    if (metadata.series && !getSeries(metadata.series.slug)) {
-      throw new Error(
-        `Post ${slug} references unknown series "${metadata.series.slug}". ` +
-          `Add it to lib/series.ts.`
-      );
-    }
-
-    return {
-      slug,
-      metadata: { ...metadata, description, tags: metadata.tags ?? [] },
-    };
+    return await readPost(slug);
   } catch (error) {
     console.error(error instanceof Error ? error.message : error);
     return notFound();
   }
 }
 
+/**
+ * For every list, feed and sitemap. A malformed post throws rather than
+ * 404ing the caller, so one bad file cannot take the blog index, the RSS
+ * feed and every tag page down with it.
+ */
 export async function getBlogPosts(): Promise<BlogPostData[]> {
-  const posts = await Promise.all(
-    ALL_POSTS.map((post) => getBlogPostMetadata(post.slug))
-  );
+  const posts = await Promise.all(ALL_POSTS.map((post) => readPost(post.slug)));
 
   return posts.sort(
     (a, b) =>

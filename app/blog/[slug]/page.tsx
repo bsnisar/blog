@@ -12,6 +12,7 @@ import { SeriesBadge, SeriesNav } from '@/components/series-parts'
 import { TagList } from '@/components/tag-list'
 import { FollowBlock } from '@/components/follow'
 import { baseUrl } from '@/app/sitemap'
+import { alternates } from '@/lib/metadata'
 
 type BlogPageProps = { params: Promise<{ slug: string }> }
 
@@ -34,7 +35,7 @@ export async function generateMetadata({
   return {
     title: metadata.title,
     description: metadata.description,
-    alternates: { canonical: url },
+    alternates: alternates(url),
     openGraph: {
       type: 'article',
       title: metadata.title,

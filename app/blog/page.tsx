@@ -1,6 +1,8 @@
 import { BlogPosts } from '@/components/posts'
+import { alternates } from '@/lib/metadata'
 
 export const metadata = {
+  alternates: alternates('/blog'),
   title: 'Blog',
   description:
     'Writing on AI engineering, startup execution, and the mental models behind building products.',

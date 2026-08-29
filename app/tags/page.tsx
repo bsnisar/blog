@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { getAllTags } from '@/lib/utils'
+import { alternates } from '@/lib/metadata'
 
 export const metadata = {
+  alternates: alternates('/tags'),
   title: 'Tags',
   description: 'Every topic written about, by how much there is to read.',
 }

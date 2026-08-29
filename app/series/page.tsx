@@ -1,8 +1,10 @@
 import Link from 'next/link'
 import { unitLabel } from '@/lib/series'
 import { getPublishedSeries } from '@/lib/utils'
+import { alternates } from '@/lib/metadata'
 
 export const metadata = {
+  alternates: alternates('/series'),
   title: 'Series',
   description:
     'Ordered arcs of writing on AI engineering and the mental models behind building products.',

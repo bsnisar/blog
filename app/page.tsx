@@ -1,4 +1,9 @@
 import { BlogPosts } from '@/components/posts'
+import { alternates } from '@/lib/metadata'
+
+export const metadata = {
+  alternates: alternates('/'),
+}
 
 export default function Page() {
   return (

@@ -29,10 +29,8 @@ export const metadata: Metadata = {
   },
   description:
     'Founder and AI architect writing about building products, mindset shifts, and the craft of creating in the era of LLMs.',
-  alternates: {
-    canonical: '/',
-    types: { 'application/rss+xml': `${baseUrl}/rss` },
-  },
+  // No `alternates` here: page-level alternates replace rather than merge,
+  // so each page builds its own with lib/metadata's helper.
   openGraph: {
     title: 'Bohdan Snisar — Insights on AI, Product Building, and Founder Mindset',
     description:

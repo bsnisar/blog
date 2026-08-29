@@ -4,6 +4,7 @@ import { PostList } from '@/components/posts'
 import { getSeries, SERIES, unitLabel } from '@/lib/series'
 import { getSeriesPosts } from '@/lib/utils'
 import { baseUrl } from '@/app/sitemap'
+import { alternates } from '@/lib/metadata'
 
 type SeriesPageProps = { params: Promise<{ slug: string }> }
 
@@ -33,7 +34,7 @@ export async function generateMetadata({
   return {
     title: series.title,
     description: series.description,
-    alternates: { canonical: url },
+    alternates: alternates(url),
     openGraph: {
       title: series.title,
       description: series.description,
