@@ -15,6 +15,16 @@
 		"binding": "ASSETS",
 		"directory": ".open-next/assets"
 	},
+	/**
+	 * Runs before any `wrangler deploy`, so a deploy started with plain
+	 * `npx wrangler deploy` (e.g. from Workers Builds) still gets the OpenNext
+	 * build AND the populateCache step. Without populateCache the prerendered
+	 * pages never land in .open-next/assets/cdn-cgi/_next_cache and every
+	 * /blog/[slug], /series/[slug] and /tags/[tag] route 404s at runtime.
+	 */
+	"build": {
+		"command": "pnpm cf:build && pnpm exec opennextjs-cloudflare populateCache remote"
+	},
 	"observability": {
 		"enabled": true
 	}
