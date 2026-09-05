@@ -15,5 +15,8 @@ export const ALL_POSTS: BlogPost[] = [
   },
   {
     "slug": "KISS-or-Die"
+  },
+  {
+    "slug": "Instinct-Can-Build-AIs-Next-Great-Moat"
   }
 ];
