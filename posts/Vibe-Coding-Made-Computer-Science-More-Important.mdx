@@ -65,38 +65,19 @@ In vibe coding, requirements behave a lot like source code. An ambiguous require
 
 ## 04 — Experts lose keystrokes and gain leverage
 
-AI coding tools do compress the difference between experts and beginners at the level of production. Both can generate a form, chart, API route, or test suite in minutes.
+AI coding tools make experts and beginners look similar at first. Both can generate a form, API route, or test suite in minutes. The difference appears when something fails.
 
-At the level of judgment, the gap can widen.
+An experienced engineer knows where to look, which assumption to challenge, and what test could disprove the implementation. Faster output gives them more chances to apply that judgment. A beginner gets more chances to ship an assumption.
 
-An experienced engineer can ask an agent to implement a feature and already have a sense of where it might fail. They inspect the risky boundary and design a test that could disprove the implementation. A beginner sees the same generated interface with fewer internal warning signals. Faster output gives the expert more chances to apply judgment, while the beginner gets more chances to ship an assumption.
-
-That is not an argument for keeping the tools away from non-programmers. Access and mastery have always been different achievements.
-
-Spreadsheets gave millions of people computational power without turning every user into a financial modeller. Website builders removed HTML from the critical path without removing information architecture, copy, accessibility, or taste.
-
-AI coding tools will follow the same pattern. They democratize construction far faster than they democratize judgment.
-
-The engineer who thrives in this environment will write less code by hand and spend more time defining behavior, separating problems, choosing constraints, reading traces, and deciding whether the output is trustworthy. Much of their advantage will be hard to observe. It shows up in a question asked before the incident, a test written before launch, or a piece of complexity that never entered the system.
+The engineer who thrives here will write less code and spend more time defining behavior, choosing constraints, reading traces, and deciding whether the result is trustworthy.
 
 ## 05 — Stop teaching syntax as the destination
 
-I do not read this research as a defence of the old computer-science curriculum. If agents can write routine implementation, memorizing syntax and reproducing textbook algorithms by hand should occupy less of a developer's education.
+This research is not a defence of memorizing syntax. Agents can handle more routine implementation, so education should move upward.
 
-But abstraction only works when somebody understands what it hides.
+Future developers still need state, control flow, data structures, concurrency, security, databases, failure recovery, and testing. They need to decompose vague requests, predict failure modes, and explain constraints clearly enough for an agent to act on them.
 
-Future developers still need to understand state and control flow, data structures, concurrency, networks, security boundaries, databases, failure recovery, and testing. They need to know why systems become inconsistent and what evidence would prove a behavior correct. They also need to explain those mental models clearly enough for an agent to act on them.
-
-The curriculum should move upward:
-
-1. Describe behavior as states, transitions, constraints, and invariants.
-2. Decompose a vague product request into independently verifiable parts.
-3. Predict failure modes before asking the agent to implement anything.
-4. Test the result adversarially instead of admiring the happy path.
-5. Read enough generated code and traces to investigate when behavior and intent diverge.
-6. Communicate requirements without assuming the agent shares unstated context.
-
-This is computer science through a different interface. The machine still works the same way, even when a model writes the instructions.
+The interface changed. The machine did not.
 
 ## 06 — The demo-to-product gap becomes the market
 

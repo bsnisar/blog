@@ -29,8 +29,7 @@ export async function generateMetadata({
   const { metadata } = await getBlogPostMetadata(slug)
 
   const url = `${baseUrl}/blog/${slug}`
-  const image =
-    metadata.image ?? `/og?title=${encodeURIComponent(metadata.title)}`
+  const image = metadata.image ?? `${url}/opengraph-image`
 
   return {
     title: metadata.title,
@@ -42,7 +41,14 @@ export async function generateMetadata({
       description: metadata.description,
       publishedTime: metadata.publishedAt,
       url,
-      images: [{ url: image }],
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: `${metadata.title} — Bohdan Snisar`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
