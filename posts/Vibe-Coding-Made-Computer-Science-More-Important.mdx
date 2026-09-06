@@ -1,0 +1,121 @@
+export const metadata = {
+  title: "Vibe Coding Made Computer Science More Important",
+  publishedAt: '2026-09-06',
+  description: "AI removed the syntax tax from software development. It did not remove the need to understand state, logic, failure, and verification — it made that knowledge the difference between a demo and a product.",
+  tags: ['AI', 'Engineering', 'Vibe Coding', 'Trends'],
+};
+
+<Lede>
+Vibe coding was sold on a simple promise: natural language would replace programming language. Describe the product, watch the agent build it, and forget the code exists.
+
+A new ETH Zurich study tested that promise. Writing skill helped people vibe code. Computer-science knowledge helped more.
+
+AI removed the syntax tax from software development. The engineering is still there, mostly in the parts beginners cannot see.
+</Lede>
+
+## 01 — What the study actually found
+
+Researchers at ETH Zurich recruited 100 university students and asked them to build small graphical applications without viewing or editing the source code. Participants described features in natural language, tested the rendered application, and asked the agent to refine it. Prompts in, software out.
+
+The study was [preregistered](https://arxiv.org/abs/2603.14133), the tasks were designed through an eight-expert consensus process, and the environment was built to resemble commercial AI coding tools while keeping the experiment controlled. Participants completed three 15-minute tasks: reproducing an interface, adding features to an existing application, and building an unfamiliar application from a written description.
+
+The researchers measured written communication, general reasoning ability, and computer-science achievement. Both writing and computer science predicted better results. Computer-science achievement had the stronger relationship with vibe-coding performance, with a correlation of 0.39 compared with 0.29 for writing.
+
+In the joint model, computer-science knowledge contributed about twice as much unique predictive variance as writing skill. Its relationship with vibe-coding performance remained significant after the researchers controlled for general cognitive ability, so the result was not simply smarter students doing better at everything.
+
+The average participant completed only 45% of the task criteria. Getting an interface on screen was easy. Getting the behavior right was much harder.
+
+The limits matter. These were university students who had completed at least one introductory computer-science course, had used large language models for programming, and were proficient in English. The tasks were short, timed, GUI-focused, and graded in a laboratory. The paper shows an association. It does not prove that computer-science education caused better performance, or settle what professional developers and complete beginners can build over weeks with current tools.
+
+Even with those limits, it is difficult to square the result with the idea that hiding source code makes knowledge of software irrelevant.
+
+## 02 — Natural language did not make the work natural
+
+Programming languages are difficult because computers are literal. They need exact syntax, explicit state, defined control flow, and instructions for cases a human would fill in without thinking.
+
+Large language models seem to relax that constraint. You can ask for "a simple meal planner" and receive a working interface without defining a schema, writing a loop, or handling a click event. The model turns an ambiguous request into the formal instructions the machine needs.
+
+The ambiguity is still there. The model is guessing what you meant.
+
+Often it guesses correctly. Then it produces something that looks right while carrying a bad assumption underneath. A total is calculated before a filter is applied. One screen reads a date in local time and another reads it in UTC. A deleted record stays in a cached list. Two users submit at once and overwrite each other. None of this has to spoil the happy-path demo.
+
+Someone still has to notice.
+
+This is where computer-science knowledge pays off. A person who understands state, iteration, conditions, data shape, and edge cases knows where to look when a polished interface feels suspicious. Good writing helps communicate the intended result. Technical knowledge helps decide what the system is supposed to do in the first place.
+
+You do not need to see the `for` loop to reason that every item must be visited. You can suspect two views have drifted apart without inspecting a state hook, and ask what happens when the second step of a database transaction fails without editing the transaction yourself.
+
+The source code was hidden in the study. The mental model was not.
+
+## 03 — The new bottleneck is knowing what to ask
+
+When implementation was expensive, many weak ideas died before becoming software. That wasted good ideas too, but it forced builders to confront technical details early.
+
+Vibe coding removes much of that filter. A founder can now go from a sentence to a convincing interface in an afternoon. More people get to create, but the first 80% is now dangerously easy to mistake for the whole job.
+
+A model knows how to produce a login screen. The person directing it has to understand that authentication, authorization, session expiry, password recovery, rate limits, audit trails, and account deletion are separate requirements. It can create a checkout, but somebody has to ask what happens when payment succeeds and the order write fails. It can display a dashboard without knowing which number is authoritative or what should happen when two people update it at once.
+
+Prompt quality matters here, although not as a bag of magic phrases. In the study's exploratory analysis, human-rated prompt quality correlated strongly with performance. Clearer, better-organized prompts appeared to explain part of the relationship between writing ability and task success.
+
+What helped was the ability to structure a thought and make it legible.
+
+"Make it work" gives the agent freedom. "When a user removes a meal, recalculate totals from the remaining meals and preserve the daily targets" gives it a behavioral contract. The second prompt works because the author understands the state transition, not because it is longer or stuffed with technical vocabulary.
+
+In vibe coding, requirements behave a lot like source code. An ambiguous requirement still compiles; it just produces ambiguous software.
+
+## 04 — Experts lose keystrokes and gain leverage
+
+AI coding tools do compress the difference between experts and beginners at the level of production. Both can generate a form, chart, API route, or test suite in minutes.
+
+At the level of judgment, the gap can widen.
+
+An experienced engineer can ask an agent to implement a feature and already have a sense of where it might fail. They inspect the risky boundary and design a test that could disprove the implementation. A beginner sees the same generated interface with fewer internal warning signals. Faster output gives the expert more chances to apply judgment, while the beginner gets more chances to ship an assumption.
+
+That is not an argument for keeping the tools away from non-programmers. Access and mastery have always been different achievements.
+
+Spreadsheets gave millions of people computational power without turning every user into a financial modeller. Website builders removed HTML from the critical path without removing information architecture, copy, accessibility, or taste.
+
+AI coding tools will follow the same pattern. They democratize construction far faster than they democratize judgment.
+
+The engineer who thrives in this environment will write less code by hand and spend more time defining behavior, separating problems, choosing constraints, reading traces, and deciding whether the output is trustworthy. Much of their advantage will be hard to observe. It shows up in a question asked before the incident, a test written before launch, or a piece of complexity that never entered the system.
+
+## 05 — Stop teaching syntax as the destination
+
+I do not read this research as a defence of the old computer-science curriculum. If agents can write routine implementation, memorizing syntax and reproducing textbook algorithms by hand should occupy less of a developer's education.
+
+But abstraction only works when somebody understands what it hides.
+
+Future developers still need to understand state and control flow, data structures, concurrency, networks, security boundaries, databases, failure recovery, and testing. They need to know why systems become inconsistent and what evidence would prove a behavior correct. They also need to explain those mental models clearly enough for an agent to act on them.
+
+The curriculum should move upward:
+
+1. Describe behavior as states, transitions, constraints, and invariants.
+2. Decompose a vague product request into independently verifiable parts.
+3. Predict failure modes before asking the agent to implement anything.
+4. Test the result adversarially instead of admiring the happy path.
+5. Read enough generated code and traces to investigate when behavior and intent diverge.
+6. Communicate requirements without assuming the agent shares unstated context.
+
+This is computer science through a different interface. The machine still works the same way, even when a model writes the instructions.
+
+## 06 — The demo-to-product gap becomes the market
+
+Vibe coding platforms will keep improving the first draft. Models will ask clarifying questions, generate tests, inspect their own output, and catch more defects before the user sees them. Some expertise that users need today will become part of the product.
+
+The gap between a demo and a product will move, but it will not close.
+
+As creation gets cheaper, people will attempt larger systems with less preparation. Generated software will touch identity, money, health, customer data, physical devices, and legal commitments. A missed edge case will become more expensive at the same time that generating another screen becomes almost free.
+
+The most useful tools will help users think like engineers. They should expose assumptions, turn vague requests into acceptance criteria, show which paths were tested, and identify irreversible actions. A rendered interface cannot be treated as proof of correctness. The system underneath it needs to become visible without forcing every user to become a full-time programmer.
+
+This is the product opportunity I see in the paper. AI coding tools can bring engineering knowledge into the workflow and teach it at the moment a user needs it.
+
+The model can supply the implementation and the user can supply the intent. Somebody still has to decide what must be true, what could go wrong, and what evidence is enough to ship.
+
+> Vibe coding did not eliminate the need to understand software. It made misunderstanding software much easier to ship.
+
+The syntax barrier is collapsing. The engineering barrier is not.
+
+<Coda next="Whether AI coding tools can teach the judgment they automate.">
+News is the study. The opinion is that removing code makes computer science more valuable, not less.
+</Coda>
