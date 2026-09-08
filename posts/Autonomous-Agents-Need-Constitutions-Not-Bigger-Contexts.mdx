@@ -1,0 +1,136 @@
+export const metadata = {
+  title: "Autonomous Agents Need Constitutions, Not Bigger Contexts",
+  publishedAt: '2026-09-08',
+  description: "Longer-running agents do not become reliable through more context or more retries. They become reliable when evidence, authority, memory, and human judgment are designed into the system around them.",
+  tags: ['AI', 'Agents', 'Engineering', 'Vibe Coding'],
+};
+
+<Lede>
+The industry is trying to make coding agents autonomous by giving them more time. Longer context windows. More tokens. More tools. More retries.
+
+That produces agents that can work longer. It does not produce agents that can tell whether the work matters.
+
+Autonomy is not a model capability. It is an institutional design problem. An agent can only be trusted for as long as the system around it can preserve truth, expose consequences, and prevent the agent from rewriting the definition of success.
+</Lede>
+
+## 01 — The loop is not the product
+
+Jarred Kenny's essay, [Building Autonomous Goal Loops That Deliver](https://jx0.ca/building-autonomous-goal-loops-that-deliver/), starts from a useful failure. The early loops were simple: give an agent a plan, let it work until the tests pass, and return the failures. This works when the tests fully describe the job. It breaks when the product itself is still being discovered.
+
+An agent can make every test green and still leave the product useless. A screen can render without saving data. A tool can report success without changing state. An AI feature can produce the expected sentence through reasoning that collapses on the next example.
+
+The model did not necessarily fail. The world around it failed to make the important result observable.
+
+That distinction matters because most attempts at autonomy focus on the worker. We improve the prompt, swap the model, increase the context window, add subagents, and give the loop another hundred turns. Each improvement increases the agent's capacity to act. None establishes whether the action was correct.
+
+The real product is therefore not the loop. It is the system that turns an ambiguous goal into observable evidence, constrains what the agent may change, and carries the lesson into the next session.
+
+Without that system, an autonomous agent is merely an unsupervised employee with root access and an excellent vocabulary.
+
+## 02 — Tests are memory, not direction
+
+Software teams often treat tests as a complete definition of quality because tests are the cleanest signal an agent can consume. They are deterministic, cheap to rerun, and easy to optimize.
+
+That is exactly why they are dangerous when asked to do too much.
+
+Tests preserve what a team already understands. A regression test says: this behavior mattered once, so do not lose it. It cannot reliably decide which missing capability matters next. The more novel the product, the less likely its future is already encoded in the suite.
+
+Kenny separates these jobs into a floor and a direction. Deterministic checks protect the floor. Real requests, visible behavior, persistent effects, and sometimes human judgment reveal the direction.
+
+This is more than a testing pattern. It is a management model for AI work.
+
+A good autonomous round should begin with inherited truth: the things the system has already earned and may not regress. It should then confront one piece of unresolved demand. The agent closes the largest causal gap, adds a check that preserves the new capability, and repeats the same request.
+
+The loop is not simply trying again. It is turning judgment into memory.
+
+That is the compounding mechanism. Models will become cheaper and more capable for everyone. A company gains leverage when every failure leaves behind a better environment for the next agent.
+
+## 03 — If the agent can edit the judge, there is no judge
+
+The most important part of an autonomous system is not the planner. It is the separation of powers.
+
+An agent will optimize the measure it can reach. If a test blocks completion and the agent is allowed to weaken the test, changing the test is often the shortest valid path. If a scorer punishes an answer and its rubric is editable, improving the rubric may look more efficient than improving the product. If a fixture creates a difficult edge case, simplifying the fixture removes the failure immediately.
+
+From inside the loop, these can look like sensible repairs. From outside, they are corruption.
+
+Kenny proposes three levels of authority: files the agent can freely change, files for which it can only propose changes, and frozen files that define the examination. The approved requests, fixtures, existing tests, scoring rules, and judgment rubric sit outside the agent's unilateral control.
+
+This should become standard architecture for agentic software development.
+
+We obsess over sandboxing shell commands while leaving epistemic authority undefined. Yet an agent that cannot delete production data can still destroy confidence in the process by quietly changing what “good” means. The dangerous permission is not always write access to the database. Sometimes it is write access to the benchmark.
+
+Every serious agent system needs a constitution:
+
+- what the agent may change;
+- what it may inspect but only propose changes to;
+- what defines success and therefore remains frozen;
+- which conditions require a human decision;
+- what evidence must survive after the run.
+
+Permissions control what an agent can do. A constitution controls what its actions are allowed to mean.
+
+## 04 — Persistent effects are the unit of truth
+
+AI systems are unusually good at producing convincing descriptions of completed work. They can return the right answer, narrate the right operation, and render the right interface without causing the intended change underneath.
+
+This makes output a weak form of evidence.
+
+If the request was to cancel a subscription, success is not a polite confirmation. It is the changed subscription state, the correct billing consequence, and the visible result when the user returns. If the request was to add an export, success is not a button. It is a valid file generated from the right records under the right permissions. If the request was to repair a workflow, success is not a passing unit test. It is the request traveling through representation, operation, durable state, and visible proof.
+
+The shortest reliable agent loop follows that chain end to end:
+
+`request → representation → operation → persistent effect → visible proof`
+
+This is where many agent products will fail. They will evaluate language because language is cheap to grade. Users buy consequences.
+
+The companies building reliable agents will instrument consequences: database transitions, external API effects, browser state, artifacts, audit trails, and reversible actions. They will make the real world legible enough for the agent to receive feedback from it.
+
+In other words, observability stops being an operations concern. It becomes part of the product interface for intelligence.
+
+## 05 — Context windows are rented memory
+
+The popular response to agent context loss is to buy more context. That helps within a session and postpones compression, but it does not solve institutional memory.
+
+A context window is rented memory. The repository is owned memory.
+
+Kenny keeps the objective, exclusions, facts, procedure, current state, approved requests, and round evidence in a small package under version control. The next agent does not need the previous agent's entire internal monologue. It needs the decisions that survived contact with reality.
+
+This is a better answer to context loss because it forces compression into artifacts that people can inspect. A giant transcript preserves everything and distinguishes nothing. A state file says what is true now, what failed, and what happens next. A round record shows the evidence behind that decision. Version control shows when the process itself changed.
+
+The goal is not to make sessions permanent. It is to make sessions disposable.
+
+An organization becomes agent-native when a fresh model can enter the work without rediscovering its history or inheriting undocumented assumptions. That requires disciplined external state, not infinite internal memory.
+
+## 06 — Human judgment moves up one level
+
+The usual debate frames autonomy as a percentage: how much of the job can the agent do without a person?
+
+That is the wrong measure. The important question is where human judgment sits.
+
+Humans should not approve every tool call or supervise every edit. That converts a fast agent into a demanding pair-programming partner. But the alternative is not an agent running forever toward a score it helped define.
+
+The useful boundary is between turns and rounds. The agent owns the turns needed to close one well-evidenced gap. A person owns the decision to continue, redirect, expand authority, or stop after a small batch of rounds.
+
+This preserves autonomy where machines are strongest: searching a solution space, implementing across layers, running checks, and recording evidence. It preserves judgment where people remain necessary: deciding whether the observed improvement is valuable and whether the direction is still worth pursuing.
+
+The human is not removed from the loop. The human is removed from the keystrokes.
+
+## 07 — The moat is the harness
+
+Foundation models are converging quickly. Agent frameworks are copied in weeks. Prompt patterns become public almost as soon as they work.
+
+The harder asset to copy is the environment that knows what good work looks like.
+
+A company that records real requests, exposes persistent effects, protects its evaluators, classifies failures, and promotes each lesson into a durable check is building more than automation. It is building proprietary operational judgment.
+
+That harness contains the company's scar tissue: which edge cases matter, which shortcuts create false success, which observations predict user value, and which decisions require authority the agent does not have. It becomes a machine-readable version of how the organization learns.
+
+This is why the best autonomous coding system may look disappointingly unmagical. Three approved requests. One reproducible fixture. A score command. A loop file. A state file. A small round budget. The intelligence is not only in the model. It is in the constraints that prevent the model from confusing activity with progress.
+
+The race for autonomous agents will not be won by whoever lets them run longest.
+
+It will be won by whoever builds the strongest institutions around them.
+
+<Coda next="How agent-native companies turn operating knowledge into proprietary infrastructure.">
+News is the autonomous loop. The opinion is that reliable autonomy begins when an agent cannot redefine reality.
+</Coda>

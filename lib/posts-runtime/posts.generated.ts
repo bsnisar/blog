@@ -21,5 +21,8 @@ export const ALL_POSTS: BlogPost[] = [
   },
   {
     "slug": "Instinct-Can-Build-AIs-Next-Great-Moat"
+  },
+  {
+    "slug": "Autonomous-Agents-Need-Constitutions-Not-Bigger-Contexts"
   }
 ];
