@@ -51,6 +51,7 @@ export default async function SeriesPage({ params }: SeriesPageProps) {
 
   const posts = await getSeriesPosts(slug)
   if (posts.length === 0) notFound()
+  const newestFirst = [...posts].reverse()
 
   return (
     <section>
@@ -63,14 +64,14 @@ export default async function SeriesPage({ params }: SeriesPageProps) {
       </p>
 
       <div className="mt-12 flex items-baseline justify-between border-b border-ink pb-3 font-mono text-label tracking-label uppercase text-muted">
-        <span>In order</span>
+        <span>Latest first</span>
         <span>
           {posts.length} {unitLabel(series, posts.length)}
         </span>
       </div>
 
       <div className="mt-2">
-        <PostList posts={posts} rail="part" showSeries={false} />
+        <PostList posts={newestFirst} rail="part" showSeries={false} />
       </div>
     </section>
   )
