@@ -11,6 +11,9 @@ export const ALL_POSTS: BlogPost[] = [
     "slug": "Vibe-Coding-Made-Computer-Science-More-Important"
   },
   {
+    "slug": "VC-Is-Quietly-Drawing-The-Post-Agent-Stack"
+  },
+  {
     "slug": "The-Wrapper-Era-Ended-On-A-Contract-Clause"
   },
   {

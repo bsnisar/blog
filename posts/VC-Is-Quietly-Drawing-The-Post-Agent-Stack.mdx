@@ -1,0 +1,115 @@
+export const metadata = {
+  title: "VC is quietly drawing the post-agent software stack",
+  publishedAt: '2026-09-12',
+  description: "Four AI rounds look unrelated until you put them on one diagram. Then they reveal where investors think value will accumulate after the coding agent.",
+  series: { slug: 'opinionated-ai', part: 2 },
+  tags: ['AI', 'Agents', 'Startups', 'Deals', 'Infrastructure'],
+};
+
+<Lede>
+$2 billion into coding agents. $50 million into agent supply-chain security. $21 million into infrastructure agents. $4 million into selling software to agents.
+
+Together, the rounds sketch an architecture diagram of the post-agent software stack. Venture capital is betting that the coding model is only the first layer where serious value will accumulate.
+</Lede>
+
+## 01 — $48 billion says something more interesting than “coding agents are hot”
+
+[Cognition raised $2 billion at a $48 billion valuation](https://techcrunch.com/2026/09/08/cognition-hits-48b-valuation-signaling-investors-believe-ai-coding-is-far-from-a-winner-take-all-market/), four months after its prior round at $26 billion. It says annualized run-rate revenue rose from $492 million to nearly $900 million over that period.
+
+$48 billion prices more than a popular coding product. It prices software creation itself as a new infrastructure market: a layer that turns a human specification into a changed production system. Code becomes an intermediate artifact in a machine-speed pipeline.
+
+A valuation tells us where investors expect value to settle. It does not guarantee they picked the right layer.
+
+`model → coding agent → execution → deployment → governance`
+
+If intelligence becomes interchangeable across Claude, Codex, Gemini and their successors, the coding-agent interface may be the place value first appears and the place it later leaks out. The system that actually executes changes, deploys them, grants permissions, contains failures and proves what happened may end up owning more of the economics.
+
+The question inside $48 billion is whether the agent that proposes a change captures more value than the machinery that lets the change safely exist.
+
+## 02 — AI agents are creating a second software supply chain
+
+[AIR emerged from stealth with $50 million across two seed rounds](https://techcrunch.com/2026/09/01/air-raises-50m-to-help-companies-vet-the-skills-and-add-ons-ai-agents-use/). Its pitch is unusually direct: discover the agents inside an enterprise, inspect the skills, plug-ins, MCP servers and other components they use, and keep re-checking them as they change.
+
+MCP is the protocol in this story. The category being built around it is supply-chain security.
+
+The first software supply chain became familiar enough to fade into the background:
+
+`source code → package registry → dependency graph → container → production`
+
+Over time, that chain acquired the boring machinery that makes modern software possible: package signing, SBOMs, provenance, vulnerability scanning, policy checks and a long record of painful exceptions.
+
+Agents are growing a parallel chain:
+
+`agent → skill → MCP server → tool → credential → external system`
+
+Now the dependency may be a capability an agent can discover, trust, compose and invoke on your behalf. A malicious package can steal a build secret. A malicious tool can exfiltrate one, alter the agent's plan or perform a perfectly valid action against the wrong system.
+
+We still talk about MCP as though the important question is whether every product will expose a server. The more consequential question is whether the ecosystem builds the equivalent of package signing, an SBOM, provenance and dependency scanning *before* agents become a normal path to production access.
+
+AIR's $50 million seed is a bet that enterprises will need this machinery sooner than the ecosystem can standardize it.
+
+## 03 — Coding agents created their own bottleneck
+
+[empirik launched with $21 million](https://empirik.ai/blog/introducing-empirik-the-autonomous-infrastructure-engineer) for what it calls an Autonomous Infrastructure Engineer. Its premise should feel familiar to anyone who has watched an agent generate a service in fifteen minutes and then watched that service wait for Terraform, permissions, security review, configuration, deployment and a human who understands the blast radius.
+
+Coding velocity has accelerated. Infrastructure change still operates at human speed.
+
+This is the bottleneck created by the success of coding agents. The faster teams create code, the more changes the rest of the organization has to absorb: new resources, modified identity policies, data migrations, changed network paths, fresh on-call burden and a wider surface for an outage.
+
+Giving an agent `terraform apply` does not make infrastructure autonomous. It gives mistakes a faster route to production.
+
+Infrastructure autonomy requires a dependable model of reality. The system has to calculate blast radius, apply policy before acting, constrain its authority and reverse a change when the world disagrees with the plan. That takes deterministic planning and capability boundaries. A chat window with production credentials will not do it.
+
+This is why infrastructure may become a more valuable agent layer than code generation. Code can be proposed in a cheap, reversible branch. Production is where the cost of being confidently wrong becomes real.
+
+## 04 — Your next customer might be Claude Code
+
+[Lightsage raised $4 million](https://www.globenewswire.com/news-release/2026/09/08/3357801/0/en/lightsage-raises-4m-to-build-the-growth-stack-for-internet-software-s-newest-customer-ai-agents.html) for what it calls Agent-Led Growth. It is the smallest round here. It also carries the most original thesis.
+
+Coding agents already discover products, choose libraries, install SDKs and call APIs. Increasingly, they will do that without a person visiting a homepage or comparing pricing pages in a dozen browser tabs.
+
+SEO taught companies to optimize this path:
+
+`website → Google → human → purchasing decision`
+
+Agent discovery changes it:
+
+`docs / GitHub / package metadata / API → agent → purchasing decision`
+
+The conversion funnel moves out of the landing page. What matters is whether an agent can find the right integration, understand the documentation, authenticate, recover from an error and determine that the price is acceptable without a sales call.
+
+That makes documentation quality, API ergonomics, machine-readable pricing, SDK correctness and agent discoverability part of growth engineering. Developer experience is becoming agent experience.
+
+That collapses the old divide between marketing and product. If an agent chooses a competitor because your README buries the quick start, a product failure has become lost distribution.
+
+## 05 — The team is sometimes the scarce asset
+
+One more data point sits outside this week's rounds. [Google reportedly discussed a deal with Mechanize](https://dealroom.co/news/143496-google-eyes-1-5b-for-mechanize-a-startup-that-raised-9-1m-seed-103-days/) worth more than $1.5 billion for a non-exclusive technology licence and part of the team. Mechanize had raised $9.1 million at a $500 million valuation earlier this year. No completed transaction has been announced, and the proposed structure matters as much as the price.
+
+The usual startup equation is product, revenue, market and multiple. Frontier AI is distorting it. In coding, reinforcement-learning environments and evaluation, the team capable of moving the model frontier may be scarcer than the product it has built.
+
+A small number of people now carry an unusual form of option value. A frontier lab cannot casually assemble a team that has learned how to make coding models materially better. A licence-and-hire deal buys that capability in one move.
+
+Acqui-hire economics have detached from startup revenue economics. Building an agent company is only one contest. Assembling the small set of teams that can improve the intelligence underneath it is another.
+
+## 06 — Follow the money, but read the architecture
+
+This is what “Follow the Money” is for. A weekly list of companies and cheque sizes expires by Monday. Capital allocation becomes interesting when it reveals a missing layer of the system.
+
+Put the five signals on one diagram:
+
+| Layer | Capital signal | The underlying wager |
+| --- | ---: | --- |
+| Agent interface | Cognition: $2B | Software creation becomes a major control point. |
+| Agent supply chain | AIR: $50M | Agent components need discovery, provenance and policy. |
+| Execution and governance | empirik: $21M | Machine-speed code needs machine-speed infrastructure reasoning. |
+| Agent-native distribution | Lightsage: $4M | Software increasingly has to persuade and serve machines. |
+| Frontier capability | Mechanize: reported $1.5B+ deal | The people who improve the model may be the scarcest layer. |
+
+The post-agent stack has several control points: the agent a team trusts, the supply chain it is allowed to use, the infrastructure it may touch, and the products it can discover and successfully operate. The company with the best demo this quarter will not automatically own them.
+
+VC is drawing that architecture diagram in public. Ignore who raised this week. Look for the missing box, then ask which apparently valuable box is destined to become a commodity.
+
+<Coda next="Whether the agent interface keeps the economics, or infrastructure and governance pull them downward.">
+News is the round. The opinion is where the round thinks the bottleneck is moving.
+</Coda>
