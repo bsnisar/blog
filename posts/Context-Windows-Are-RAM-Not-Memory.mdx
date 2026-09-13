@@ -1,0 +1,67 @@
+export const metadata = {
+  title: "Context windows are RAM, not memory",
+  publishedAt: '2026-09-13',
+  description: "Long-running agents will not become reliable by fitting more tokens into one prompt. They need durable state, selective retrieval, provenance, and a way to recover from bad memory.",
+  series: { slug: 'opinionated-ai', part: 3 },
+  tags: ['AI', 'Agents', 'Engineering', 'Infrastructure'],
+};
+
+<Lede>
+GPT-6 Astra arrived with a 1.05 million-token context window. Everyone will post the benchmarks. I think the more important launch happened around the model.
+
+Codex can carry useful context from earlier work into future sessions through local memory files. Context windows are starting to look like RAM: large, expensive working space that still needs a durable system behind it.
+</Lede>
+
+## 01 — A bigger window still ends
+
+[Astra supports 1.05 million tokens](https://developers.openai.com/api/docs/models/gpt-6-astra), plus prompt caching, persisted reasoning and compaction. All useful. None of them removes the context boundary.
+
+An agent working for hours can inspect thousands of files, call tools, retry failed changes and hand work to subagents. Eventually the history gets too large. Codex compacts it into a shorter summary and keeps going.
+
+That summary is already a memory decision. Something survives. Something disappears.
+
+We spent two years celebrating larger context windows as though enough tokens would solve this. They solve the working-set problem. The agent can hold more code, evidence and instructions while making the next decision.
+
+That is RAM. It matters, but it is not memory.
+
+## 02 — The failed attempt may matter later
+
+Long engineering tasks are full of details whose importance appears late. A failed migration may reveal a hidden production constraint three hours later. A rejected implementation may contain the reason nobody should try it again. A passing test may depend on a fixture that quietly invalidates the result. If compaction drops the detail, the next context cannot retrieve it by thinking harder.
+
+This is what bothers me about summaries. They flatten evidence into claims.
+
+“The API rejects duplicate requests” is cheap to preserve. The response body, environment and exact command that proved it are expensive. Once those disappear, the agent remembers the conclusion but cannot check how it got there.
+
+More tokens only postpone that choice. They do not tell the system what deserves to survive.
+
+## 03 — Long-running agents are rediscovering databases
+
+[Codex memories](https://learn.chatgpt.com/docs/customization/memories) make the separation explicit. Eligible prior chats can become local Markdown files containing summaries, durable entries, recent inputs and supporting evidence. Codex can then inject relevant memories into future sessions. The files live outside the model's context and survive after the active window is gone.
+
+Markdown is not the breakthrough. Separating working state from durable state is.
+
+We have been asking one prompt to be the working set, archive, search index and source of truth. Software stopped doing this decades ago.
+
+`working context → durable history → selective retrieval`
+
+Context holds the current task. History preserves what happened. Retrieval brings back the small part that matters now.
+
+This looks less like prompt engineering and more like database design because it is database design. State has to outlive the process. Records need provenance. Derived summaries need a path back to evidence.
+
+## 04 — Memory gives agents new ways to be wrong
+
+Forgetting is obvious. Bad memory is quieter.
+
+An agent can retrieve a requirement after the user changed it. It can preserve a workaround after the bug was fixed. It can repeat an old conclusion after the repository or production environment has moved on.
+
+Now we need timestamps, provenance, invalidation and recovery. We need a rule for conflict between an old memory, the current repository and a new instruction.
+
+OpenAI's own guidance draws an important boundary: required team rules belong in `AGENTS.md` or checked-in documentation. Memory is a recall layer, not the only source for instructions that must always apply.
+
+A memory can help the agent resume work or avoid repeating a failed approach. It should not become a hidden policy file that nobody reviews. The repository still owns shared truth. Memory owns useful recall. The context window owns the decision happening now.
+
+The next model will probably fit even more tokens. Fine. Agent reliability will depend on what survives after those tokens are gone, why it comes back, and whether it is still true.
+
+<Coda next="Why better models are turning prompt engineering into technical debt.">
+News is the million-token window. The opinion is that the important state belongs outside it.
+</Coda>
