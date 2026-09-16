@@ -1,42 +1,56 @@
 export const metadata = {
   title: "The model got better. The environment had to catch up.",
   publishedAt: '2026-09-16',
-  description: "Astra and Fable make assistants more useful during execution. That creates new requirements for memory, prompts, testing environments and production control.",
+  description: "New model releases are making software execution more useful. The next requirements are structured decisions, durable memory and a believable world to work in.",
   series: { slug: 'opinionated-ai', part: 4 },
   tags: ['AI', 'Agents', 'Engineering', 'Infrastructure'],
 };
 
 <Lede>
-Astra and Fable look like another round in the model race.
+Astra, Fable and Jev look like three more model releases.
 
-That is not the interesting part. For the first time, while doing actual work, I started feeling that I had a useful assistant during execution. Not just a system that answers questions, but one that can stay with the problem and help move it forward.
+The useful change is not another benchmark. Models are moving closer to software that can make decisions, retain state and operate inside a workflow.
 </Lede>
 
-## 01 — The model is becoming part of the work
+## 01 — AI needs a software interface, not another chat window
 
-Older models were useful at the edges of a task. They explained code, suggested changes and generated drafts.
+[Diogo Almeida](https://x.com/CompleteSkeptic) worked at OpenAI on the instruction-following methods behind ChatGPT. He then spent two years asking why increasingly capable chat models had produced so little automation. [TypeSafe’s System One announcement](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is his answer.
 
-The newer ones can remain inside the task longer. They inspect a repository, make a change, run a test, react to the result and continue.
+Its first model, Jev, is designed to return typed decisions with probabilities rather than generate an open-ended string. In [his announcement](https://x.com/CompleteSkeptic/status/2099925684256899543?s=20), Almeida describes it as composable intelligence built for decisions, claiming it is 20 to 200 times faster and 40 to 400 times cheaper.
 
-That is a different product category. The value is no longer only in producing an answer. It is in carrying part of the work.
+TypeSafe’s comparison with ordinary LLMs is compact:
 
-## 02 — A context window is not memory
+| Traditional LLM | System One / Jev |
+| --- | --- |
+| Returns strings | Returns typed decisions with confidence |
+| Samples sequentially, token by token | Samples decisions in parallel |
+| Serves human-facing answers | Fits inside workflow control and branching |
 
-[Astra’s million-token context](https://developers.openai.com/api/docs/models/gpt-6-astra) gives an agent more room to work before it has to compress its history. It does not make that history durable.
+Most model APIs expose one primitive: generate tokens. Even when software needs a classification, a route, a score or a branch, the model returns prose. The application then parses it, validates it, retries it and hopes the answer did not quietly change the workflow.
+
+Jev flips that interface. Unstructured state goes in, and software-readable decisions come out. The decisions are sampled in parallel, carry confidence scores and fit a schema defined by the application.
+
+TypeSafe reports response times of 70 to 500 milliseconds and input pricing of $0.042 per million tokens, with output too cheap to meter. These are early, self-reported numbers, but they point at a real architectural change. A model can sit inside an ordinary program wherever a hard-coded rule is too brittle and a general LLM is too slow, expensive or unconstrained.
+
+Type safety does not make a decision true. It removes one class of failure: the model cannot invent a new output shape halfway through a workflow. The surrounding code still needs to check the decision, handle uncertainty and define what happens when confidence is low.
+
+The most useful AI model may be the one that writes nothing. AI no longer has to be the whole worker. It can become a probabilistic function inside a deterministic system, making the small decisions that ordinary code can compose safely.
+
+## 02 — The model is becoming part of the work
+
+[Astra](https://developers.openai.com/api/docs/models/gpt-6-astra) and [Fable 5.1](https://support.claude.com/en/articles/12138966-release-notes) are presented as coding and long-running work models.
+
+The useful signal is not which benchmark moved. It is that the model can remain inside a task longer. It can inspect a repository, change something, run a test, react to the result and continue.
+
+The value is no longer only in producing an answer. It is in carrying part of the work.
+
+## 03 — A context window is not memory
+
+Astra’s million-token context gives an agent more room to work before it has to compress its history. It does not make that history durable.
 
 Long tasks produce failed attempts, decisions, constraints and evidence that may matter much later. If those details disappear during compaction, the next context cannot recover them by being smarter.
 
 Persistent memories solve a different problem. The model needs to separate current working state from durable history. More tokens help the agent hold more information. Memory decides what survives.
-
-## 03 — Prompt engineering is starting to age
-
-[OpenAI’s new guidance for Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) recommends shorter instructions, leaner `AGENTS.md` files and fewer rules written to compensate for weak models.
-
-That feels right. We spent years adding prompts because the models needed constant steering. Some of that scaffolding is now becoming a constraint.
-
-Every workaround for yesterday’s model becomes a rule that tomorrow’s model has to carry.
-
-Prompt engineering will not disappear. It will move closer to product design: clear contracts, useful context and sharp boundaries.
 
 ## 04 — A sandbox is not enough
 
@@ -44,32 +58,20 @@ Prompt engineering will not disappear. It will move closer to product design: cl
 
 A sandbox answers what a program is allowed to access. An agent environment also needs to answer what happens when the agent believes it accessed something.
 
-A coding agent needs to create a Stripe customer, open a pull request, send a webhook, deploy a function, break a queue and observe the failure. Giving it real credentials is unsafe. Giving it no external systems makes the test meaningless.
+A coding agent needs to create a Stripe customer, open a pull request, send a webhook, deploy a function and observe a failure. Giving it real credentials is unsafe. Giving it no external systems makes the test meaningless.
 
-The missing layer is a believable fake world.
+The missing layer is a believable fake world with state, traces and failure injection. The agent should be able to repair what it broke without spending money, changing production or waiting for another team.
 
-## 05 — The world should be disposable
-
-This is more useful than a collection of mocks. The environment needs state. A customer should exist after creation. A webhook should arrive. A trace should show the failure. The agent needs enough evidence to repair the system and try again.
-
-That makes realistic testing possible without spending money, changing production or waiting for another team.
+For the first time, I feel that I have a good assistant during execution. The model can do more of the work because the surrounding environment gives it somewhere safe to act.
 
 For a small tool that may exist for thirty minutes, a disposable simulated environment can make more sense than a traditional staging setup.
 
-## 06 — Production still needs a boundary
-
-Simulation does not remove the need for control.
-
-An agent can prove that a change works in a fake environment. Production still needs permissions, approvals, rollback and an audit trail. Akuity’s agentic control-plane work points at this second half of the problem: let agents operate through existing delivery controls instead of handing them raw infrastructure credentials.
-
-The agent should earn access to production by producing evidence, not by asking for a larger secret.
-
 ## Coda
 
-The model is getting better at execution. The next bottleneck is giving it enough memory, enough reality and enough control to finish the job.
+The model is getting better at execution. The next bottleneck is giving it a useful interface, durable memory and enough reality to finish the job.
 
-Containers gave software a disposable computer. AI agents will need a disposable world around it.
+Containers gave software a disposable computer. AI agents will need a disposable world around them.
 
 <Coda next="Why better models are turning prompt engineering into technical debt.">
-The news is a set of model and infrastructure releases. The opinion is that execution is now the product, and the environment around the model has to become part of it.
+The news is a set of model and infrastructure releases. The opinion is that execution is becoming the product, and the environment around the model has to become part of it.
 </Coda>
