@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
-const withMDX = require('@next/mdx')()
+
+const withMDX = require('@next/mdx')({
+  options: {
+    remarkPlugins: ["remark-gfm"],
+  },
+})
 
 const nextConfig: NextConfig = {
 	/* config options here */
