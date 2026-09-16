@@ -17,6 +17,9 @@ export const ALL_POSTS: BlogPost[] = [
     "slug": "The-Wrapper-Era-Ended-On-A-Contract-Clause"
   },
   {
+    "slug": "The-Model-Got-Better-The-Environment-Had-To-Catch-Up"
+  },
+  {
     "slug": "The-Mental-Models-That-Poison-Founders"
   },
   {
