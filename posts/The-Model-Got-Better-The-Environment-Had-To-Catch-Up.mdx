@@ -12,29 +12,38 @@ Astra, Fable and Jev look like three more model releases.
 The useful change is not another benchmark. Models are moving closer to software that can make decisions, retain state and operate inside a workflow.
 </Lede>
 
-## 01 — AI needs a software interface, not another chat window
+## 01 — Jev is a classifier that does not need a new classifier
 
-[Diogo Almeida](https://x.com/CompleteSkeptic) worked at OpenAI on the instruction-following methods behind ChatGPT. He then spent two years asking why increasingly capable chat models had produced so little automation. [TypeSafe’s System One announcement](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is his answer.
+[Diogo Almeida](https://x.com/CompleteSkeptic) worked at OpenAI on the instruction-following methods behind ChatGPT. After two years in stealth, his answer to the automation problem is [TypeSafe’s System One](https://typesafe.ai/blog/introducing-system-one-models-and-jev), starting with a model called Jev.
 
-Its first model, Jev, is designed to return typed decisions with probabilities rather than generate an open-ended string. In [his announcement](https://x.com/CompleteSkeptic/status/2099925684256899543?s=20), Almeida describes it as composable intelligence built for decisions, claiming it is 20 to 200 times faster and 40 to 400 times cheaper.
+The easiest way to understand it is a support ticket. You define a question such as `route_to`, with three allowed answers: `billing`, `technical`, or `sales`. Jev reads the ticket as normal text. One possible result is billing 0.97, technical 0.02, sales 0.01.
+
+Your code can route the ticket, ask a human to review it, or call another tool. It does not parse a paragraph and hope the model followed the JSON schema.
+
+[Matija Šošić’s explanation](https://x.com/MatijaSosic/status/2100190746389135772) is the useful one: yes, Jev is classifier-like, but it accepts unstructured text and works across use cases without training a separate classifier for each one. LLM-like input, classifier-like output.
+
+<XEmbed
+  href="https://x.com/MatijaSosic/status/2100190746389135772/video/1?s=46"
+  label="Watch Matija Šošić explain Jev on X"
+/>
 
 TypeSafe’s comparison with ordinary LLMs is compact:
 
 | Traditional LLM | System One / Jev |
 | --- | --- |
-| Returns strings | Returns typed decisions with confidence |
-| Samples sequentially, token by token | Samples decisions in parallel |
-| Serves human-facing answers | Fits inside workflow control and branching |
+| Returns a string | Returns a typed decision with probabilities |
+| Samples one token after another | Samples decisions in parallel |
+| Needs parsing before code can act | Fits directly into workflow control |
 
 Most model APIs expose one primitive: generate tokens. Even when software needs a classification, a route, a score or a branch, the model returns prose. The application then parses it, validates it, retries it and hopes the answer did not quietly change the workflow.
 
-Jev flips that interface. Unstructured state goes in, and software-readable decisions come out. The decisions are sampled in parallel, carry confidence scores and fit a schema defined by the application.
+Jev gives up open-ended text to make that path shorter. TypeSafe says Jev is 20 to 200 times faster and 40 to 400 times cheaper on its System One tasks, with 70 to 500 millisecond response times and $0.042 per million input tokens. These are early, self-reported numbers, but the architectural trade-off is clear: a model can sit inside ordinary code wherever a hard-coded rule is too brittle and a general LLM is too slow or unconstrained.
 
-TypeSafe reports response times of 70 to 500 milliseconds and input pricing of $0.042 per million tokens, with output too cheap to meter. These are early, self-reported numbers, but they point at a real architectural change. A model can sit inside an ordinary program wherever a hard-coded rule is too brittle and a general LLM is too slow, expensive or unconstrained.
+Type safety does not make a decision true. It guarantees the shape, not the meaning. The surrounding code still needs to check the decision, handle uncertainty and decide what happens when confidence is low.
 
-Type safety does not make a decision true. It removes one class of failure: the model cannot invent a new output shape halfway through a workflow. The surrounding code still needs to check the decision, handle uncertainty and define what happens when confidence is low.
+[TypeSafe raised a $40 million seed round led by DCVC](https://www.dcvc.com/news-insights/typesafe-emerges-from-stealth-with-a-new-way-of-doing-ai/). The bet is that software will need many small, cheap decisions more often than it needs another paragraph.
 
-The most useful AI model may be the one that writes nothing. AI no longer has to be the whole worker. It can become a probabilistic function inside a deterministic system, making the small decisions that ordinary code can compose safely.
+The most useful AI model may be the one that writes nothing.
 
 ## 02 — The model is becoming part of the work
 

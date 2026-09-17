@@ -246,6 +246,23 @@
     height: auto;
   }
 
+  .article .x-embed {
+    width: 100%;
+    max-width: 550px;
+    margin-block: --spacing(8);
+  }
+
+  .article .x-embed blockquote.twitter-tweet {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-size: var(--text-small);
+  }
+
+  .article .x-embed iframe {
+    max-width: 100%;
+  }
+
   .article table {
     width: 100%;
     border-collapse: collapse;
