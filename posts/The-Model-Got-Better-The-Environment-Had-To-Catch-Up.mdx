@@ -9,9 +9,9 @@ export const metadata = {
 <Lede>
 TypeSafe's Jev looks like a classifier.
 
-That description is accurate and incomplete. Jev reads ordinary text, answers a question you define, returns a typed result with probabilities, and lets software decide what happens next.
+That is close. Jev reads ordinary text, answers a question you define, returns a typed result with probabilities, and lets software decide what happens next.
 
-The interesting change is the interface. The model does not need to write a paragraph before the program can act.
+The model does not need to write a paragraph before the program can act.
 </Lede>
 
 ## 01 — Start with the browser test
@@ -33,13 +33,13 @@ The interesting change is the interface. The model does not need to write a para
   </a>
 </video>
 
-This is more useful than a benchmark chart because it shows where the model fits.
+The demo shows where Jev sits in the system better than a benchmark chart does.
 
-The browser sessions do the work. They produce pages, clicks, errors and application state. Jev answers small questions around that state: did the flow recover, did the release behave correctly, should this result be escalated?
+The browser sessions do the work: pages, clicks, errors and application state. Jev answers small questions about that state: did the flow recover, did the release behave correctly, should this result be escalated?
 
-The surrounding program runs those checks in parallel, collects the decisions and reports failures. The model is one component in the test system, not the whole system.
+The surrounding program runs those checks in parallel, collects the decisions and reports failures. Jev is one component in the test system.
 
-## 02 — What Jev actually does
+## 02 — How Jev works
 
 [System One](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is TypeSafe's name for models built to run inside software. Jev is its first public model.
 
@@ -51,15 +51,15 @@ question: route_to
 answers:  billing | technical | sales
 ```
 
-An ordinary language model usually returns a string. Your application then parses the answer, validates it, retries it, and hopes the text did not quietly change the workflow.
+An ordinary language model usually returns a string. Your application then parses the answer, validates it, retries it, and hopes the answer does not change the workflow.
 
 Jev returns a value from the allowed set and a probability for the decision. In this example, the result might be `billing` with high confidence. The code can route the ticket, ask for review, or call another tool.
 
-That is the whole idea in simple language:
+The useful abstraction is simple:
 
 > Give the model state and a fixed question. Get back a decision that code can use.
 
-Matija Šošić explains the boundary well in [his short explanation](https://x.com/MatijaSosic/status/2100190746389135772): Jev is classifier-like, but it accepts unstructured text and does not require a separate training run for every use case.
+Matija Šošić puts it plainly in [his short explanation](https://x.com/MatijaSosic/status/2100190746389135772): Jev is classifier-like, accepts unstructured text, and does not require a separate training run for every use case.
 
 ## 03 — Why this is different from JSON mode
 
@@ -67,9 +67,9 @@ JSON mode changes the shape of an LLM's answer. The model still generates text o
 
 Jev starts with a different contract. The possible output shape is defined in advance. The model is trained and served to answer typed questions, and TypeSafe says it samples those decisions in parallel.
 
-The difference is not cosmetic. A language model is asked to produce a response that software can interpret. Jev is asked to produce the decision software needs.
+With an LLM, the program interprets a response. With Jev, the program receives the decision it needs.
 
-That is why the useful comparison is short:
+The distinction:
 
 | Traditional LLM | System One / Jev |
 | --- | --- |
@@ -81,19 +81,19 @@ That is why the useful comparison is short:
 
 Software is full of decisions that are too messy for a hard-coded rule and too frequent to justify a long chat-model call.
 
-Route this request. Score this risk. Decide whether to retry. Check whether the browser state is broken. Escalate only when confidence is low.
+Route a request, score a risk, decide whether to retry, inspect browser state, and escalate only when confidence is low.
 
-These are not requests for prose. They are requests for a decision inside a larger program.
+Each one belongs inside a larger program as a decision, not a paragraph.
 
-TypeSafe calls Jev's training approach RLCD, or Reinforcement Learning for Calibrated Decisions. The goal is not only to pick an answer, but to return a probability that the surrounding workflow can use to choose between automatic action and human review.
+TypeSafe calls Jev's training approach RLCD, or Reinforcement Learning for Calibrated Decisions. Jev picks an answer and returns a probability, so the workflow can choose between automatic action and human review.
 
-This is the part I find important. AI does not have to be the whole application. It can be a probabilistic function inside an otherwise ordinary system.
+That is the part I care about: AI can be a probabilistic function inside an otherwise ordinary system.
 
-## 05 — The trade-off is the product
+## 05 — Jev gives up open-ended text
 
-Jev gives up open-ended text. It is not the model you use for a conversation, an explanation, or code generation. It is useful when the application already knows the question and the set of actions that can follow.
+Use a general model for conversation, explanation, or code. Use Jev when the application already knows the question and the actions that can follow.
 
-TypeSafe reports 70 to 500 millisecond response times, $0.042 per million input tokens, and speed and cost gains of 20 to 200 times and 40 to 400 times on its System One tasks. Those are early, self-reported numbers. The architectural trade-off is easier to evaluate than the headline: less freedom in exchange for a cheaper, faster and more predictable decision primitive.
+TypeSafe reports 70 to 500 millisecond response times, $0.042 per million input tokens, and speed and cost gains of 20 to 200 times and 40 to 400 times on its System One tasks. These are early, self-reported numbers. The trade-off is less freedom in exchange for a cheaper, faster and more predictable decision primitive.
 
 Type safety also does not make a decision true. It guarantees the shape, not the meaning. The surrounding code still needs to set thresholds, handle uncertainty and decide what happens when the model is wrong.
 
@@ -103,8 +103,8 @@ The most useful AI model may be the one that writes nothing.
 
 ## Coda
 
-The question is not whether Jev replaces a general LLM. It is whether software starts using both: one model for explanations and open-ended work, another for the thousands of decisions around that work.
+Software can use both kinds of model: one for explanations and open-ended work, another for the thousands of decisions around it.
 
 <Coda next="Whether AI becomes more useful when it returns fewer words.">
-The news is TypeSafe and Jev. The opinion is that AI becomes easier to compose when the model returns a decision instead of making every program interpret prose.
+TypeSafe is betting that AI becomes easier to compose when the model returns a decision and leaves prose out of the control path.
 </Coda>
