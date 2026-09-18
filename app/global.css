@@ -263,6 +263,15 @@
     max-width: 100%;
   }
 
+  .article .article-video {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin-block: --spacing(8);
+    background-color: var(--color-ink);
+  }
+
   .article table {
     width: 100%;
     border-collapse: collapse;

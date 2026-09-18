@@ -1,86 +1,110 @@
 export const metadata = {
-  title: "The model got better. The environment had to catch up.",
-  publishedAt: '2026-09-16',
-  description: "New model releases are making software execution more useful. The next requirements are structured decisions, durable memory and a believable world to work in.",
+  title: "The model that writes nothing",
+  publishedAt: '2026-09-18',
+  description: "TypeSafe's Jev is built for machine-facing decisions rather than chat. The interesting part is what happens when AI returns a decision that software can use directly.",
   series: { slug: 'opinionated-ai', part: 4 },
-  tags: ['AI', 'Agents', 'Engineering', 'Infrastructure'],
+  tags: ['AI', 'Models', 'Automation', 'Engineering'],
 };
 
 <Lede>
-Astra, Fable and Jev look like three more model releases.
+TypeSafe's Jev looks like a classifier.
 
-The useful change is not another benchmark. Models are moving closer to software that can make decisions, retain state and operate inside a workflow.
+That description is accurate and incomplete. Jev reads ordinary text, answers a question you define, returns a typed result with probabilities, and lets software decide what happens next.
+
+The interesting change is the interface. The model does not need to write a paragraph before the program can act.
 </Lede>
 
-## 01 — Jev is a classifier that does not need a new classifier
+## 01 — Start with the browser test
 
-[Diogo Almeida](https://x.com/CompleteSkeptic) worked at OpenAI on the instruction-following methods behind ChatGPT. After two years in stealth, his answer to the automation problem is [TypeSafe’s System One](https://typesafe.ai/blog/introducing-system-one-models-and-jev), starting with a model called Jev.
-
-The easiest way to understand it is a support ticket. You define a question such as `route_to`, with three allowed answers: `billing`, `technical`, or `sales`. Jev reads the ticket as normal text. One possible result is billing 0.97, technical 0.02, sales 0.01.
-
-Your code can route the ticket, ask a human to review it, or call another tool. It does not parse a paragraph and hope the model followed the JSON schema.
-
-[Matija Šošić’s explanation](https://x.com/MatijaSosic/status/2100190746389135772) is the useful one: yes, Jev is classifier-like, but it accepts unstructured text and works across use cases without training a separate classifier for each one. LLM-like input, classifier-like output.
+[Rafal Wilinski describes](https://x.com/rafalwilinski/status/2100882207879434359) a Jev-powered use case: a massively parallel, browser-based adversarial testing suite that tries to break each release and costs pennies.
 
 <XEmbed
-  href="https://x.com/MatijaSosic/status/2100190746389135772/video/1?s=46"
-  label="Watch Matija Šošić explain Jev on X"
+  href="https://x.com/rafalwilinski/status/2100882207879434359"
+  label="Read Rafal Wilinski's post about using Jev for browser testing"
 />
 
-TypeSafe’s comparison with ordinary LLMs is compact:
+<video className="article-video" controls playsInline preload="metadata">
+  <source
+    src="https://video.twimg.com/amplify_video/2100881920343105536/vid/avc1/2880x2160/xZmdi6NJHSIbX23m.mp4?tag=29"
+    type="video/mp4"
+  />
+  <a href="https://video.twimg.com/amplify_video/2100881920343105536/vid/avc1/2880x2160/xZmdi6NJHSIbX23m.mp4?tag=29">
+    Watch the browser-testing demo.
+  </a>
+</video>
+
+This is more useful than a benchmark chart because it shows where the model fits.
+
+The browser sessions do the work. They produce pages, clicks, errors and application state. Jev answers small questions around that state: did the flow recover, did the release behave correctly, should this result be escalated?
+
+The surrounding program runs those checks in parallel, collects the decisions and reports failures. The model is one component in the test system, not the whole system.
+
+## 02 — What Jev actually does
+
+[System One](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is TypeSafe's name for models built to run inside software. Jev is its first public model.
+
+Imagine a support ticket:
+
+```text
+state:    "I changed plans and my invoice doubled."
+question: route_to
+answers:  billing | technical | sales
+```
+
+An ordinary language model usually returns a string. Your application then parses the answer, validates it, retries it, and hopes the text did not quietly change the workflow.
+
+Jev returns a value from the allowed set and a probability for the decision. In this example, the result might be `billing` with high confidence. The code can route the ticket, ask for review, or call another tool.
+
+That is the whole idea in simple language:
+
+> Give the model state and a fixed question. Get back a decision that code can use.
+
+Matija Šošić explains the boundary well in [his short explanation](https://x.com/MatijaSosic/status/2100190746389135772): Jev is classifier-like, but it accepts unstructured text and does not require a separate training run for every use case.
+
+## 03 — Why this is different from JSON mode
+
+JSON mode changes the shape of an LLM's answer. The model still generates text one token after another and the application still depends on that generation behaving correctly.
+
+Jev starts with a different contract. The possible output shape is defined in advance. The model is trained and served to answer typed questions, and TypeSafe says it samples those decisions in parallel.
+
+The difference is not cosmetic. A language model is asked to produce a response that software can interpret. Jev is asked to produce the decision software needs.
+
+That is why the useful comparison is short:
 
 | Traditional LLM | System One / Jev |
 | --- | --- |
-| Returns a string | Returns a typed decision with probabilities |
-| Samples one token after another | Samples decisions in parallel |
+| Generates a string | Returns a typed decision |
+| Samples token by token | Samples decisions in parallel |
 | Needs parsing before code can act | Fits directly into workflow control |
 
-Most model APIs expose one primitive: generate tokens. Even when software needs a classification, a route, a score or a branch, the model returns prose. The application then parses it, validates it, retries it and hopes the answer did not quietly change the workflow.
+## 04 — The model becomes a fuzzy if-statement
 
-Jev gives up open-ended text to make that path shorter. TypeSafe says Jev is 20 to 200 times faster and 40 to 400 times cheaper on its System One tasks, with 70 to 500 millisecond response times and $0.042 per million input tokens. These are early, self-reported numbers, but the architectural trade-off is clear: a model can sit inside ordinary code wherever a hard-coded rule is too brittle and a general LLM is too slow or unconstrained.
+Software is full of decisions that are too messy for a hard-coded rule and too frequent to justify a long chat-model call.
 
-Type safety does not make a decision true. It guarantees the shape, not the meaning. The surrounding code still needs to check the decision, handle uncertainty and decide what happens when confidence is low.
+Route this request. Score this risk. Decide whether to retry. Check whether the browser state is broken. Escalate only when confidence is low.
 
-[TypeSafe raised a $40 million seed round led by DCVC](https://www.dcvc.com/news-insights/typesafe-emerges-from-stealth-with-a-new-way-of-doing-ai/). The bet is that software will need many small, cheap decisions more often than it needs another paragraph.
+These are not requests for prose. They are requests for a decision inside a larger program.
+
+TypeSafe calls Jev's training approach RLCD, or Reinforcement Learning for Calibrated Decisions. The goal is not only to pick an answer, but to return a probability that the surrounding workflow can use to choose between automatic action and human review.
+
+This is the part I find important. AI does not have to be the whole application. It can be a probabilistic function inside an otherwise ordinary system.
+
+## 05 — The trade-off is the product
+
+Jev gives up open-ended text. It is not the model you use for a conversation, an explanation, or code generation. It is useful when the application already knows the question and the set of actions that can follow.
+
+TypeSafe reports 70 to 500 millisecond response times, $0.042 per million input tokens, and speed and cost gains of 20 to 200 times and 40 to 400 times on its System One tasks. Those are early, self-reported numbers. The architectural trade-off is easier to evaluate than the headline: less freedom in exchange for a cheaper, faster and more predictable decision primitive.
+
+Type safety also does not make a decision true. It guarantees the shape, not the meaning. The surrounding code still needs to set thresholds, handle uncertainty and decide what happens when the model is wrong.
+
+[TypeSafe raised a $40 million seed round led by DCVC](https://www.dcvc.com/news-insights/typesafe-emerges-from-stealth-with-a-new-way-of-doing-ai/). The money is a bet that software will need many small decisions more often than it needs another paragraph.
 
 The most useful AI model may be the one that writes nothing.
 
-## 02 — The model is becoming part of the work
-
-[Astra](https://developers.openai.com/api/docs/models/gpt-6-astra) and [Fable 5.1](https://support.claude.com/en/articles/12138966-release-notes) are presented as coding and long-running work models.
-
-The useful signal is not which benchmark moved. It is that the model can remain inside a task longer. It can inspect a repository, change something, run a test, react to the result and continue.
-
-The value is no longer only in producing an answer. It is in carrying part of the work.
-
-## 03 — A context window is not memory
-
-Astra’s million-token context gives an agent more room to work before it has to compress its history. It does not make that history durable.
-
-Long tasks produce failed attempts, decisions, constraints and evidence that may matter much later. If those details disappear during compaction, the next context cannot recover them by being smarter.
-
-Persistent memories solve a different problem. The model needs to separate current working state from durable history. More tokens help the agent hold more information. Memory decides what survives.
-
-## 04 — A sandbox is not enough
-
-[LocalStack’s acquisition of WonderTwin](https://blog.localstack.cloud/introducing-application-emulators-wondertwin-ai/) extends local emulation beyond AWS to services such as GitHub, Stripe and PostHog.
-
-A sandbox answers what a program is allowed to access. An agent environment also needs to answer what happens when the agent believes it accessed something.
-
-A coding agent needs to create a Stripe customer, open a pull request, send a webhook, deploy a function and observe a failure. Giving it real credentials is unsafe. Giving it no external systems makes the test meaningless.
-
-The missing layer is a believable fake world with state, traces and failure injection. The agent should be able to repair what it broke without spending money, changing production or waiting for another team.
-
-For the first time, I feel that I have a good assistant during execution. The model can do more of the work because the surrounding environment gives it somewhere safe to act.
-
-For a small tool that may exist for thirty minutes, a disposable simulated environment can make more sense than a traditional staging setup.
-
 ## Coda
 
-The model is getting better at execution. The next bottleneck is giving it a useful interface, durable memory and enough reality to finish the job.
+The question is not whether Jev replaces a general LLM. It is whether software starts using both: one model for explanations and open-ended work, another for the thousands of decisions around that work.
 
-Containers gave software a disposable computer. AI agents will need a disposable world around them.
-
-<Coda next="Why better models are turning prompt engineering into technical debt.">
-The news is a set of model and infrastructure releases. The opinion is that execution is becoming the product, and the environment around the model has to become part of it.
+<Coda next="Whether AI becomes more useful when it returns fewer words.">
+The news is TypeSafe and Jev. The opinion is that AI becomes easier to compose when the model returns a decision instead of making every program interpret prose.
 </Coda>
