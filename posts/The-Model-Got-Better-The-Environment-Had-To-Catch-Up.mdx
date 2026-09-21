@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Most agent steps do not need an LLM",
+  title: "Jev: most agent steps do not need an LLM",
   publishedAt: '2026-09-18',
   description: "TypeSafe gave up text generation to make AI decisions cheap and fast enough to run inside ordinary software.",
   series: { slug: 'opinionated-ai', part: 4 },
@@ -7,19 +7,97 @@ export const metadata = {
 };
 
 <Lede>
-General models should plan. TypeSafe's Jev should handle the thousands of bounded decisions around the plan.
+The AI internet has spent the week buzzing about Jev, a model that cannot write.
 
-That split may matter more than another improvement in chat.
+That limitation is the interesting part. TypeSafe removed text generation to make Jev fast, cheap and easier to place inside ordinary software.
 </Lede>
 
-## 01 — Start with the browser test
+## 01. TypeSafe released a model for machines
 
-[Rafal Wilinski describes](https://x.com/rafalwilinski/status/2100882207879434359) a Jev-powered use case: a massively parallel, browser-based adversarial testing suite that tries to break each release and costs pennies.
+TypeSafe released Jev on September 15 after two years in stealth. Its founder, Diogo Almeida, worked on the research behind ChatGPT. He started the company with a question: if chat models are so capable, why have they automated so little work?
 
-<XEmbed
-  href="https://x.com/rafalwilinski/status/2100882207879434359"
-  label="Read Rafal Wilinski's post about using Jev for browser testing"
-/>
+His answer is that chat may be the wrong interface.
+
+An LLM is trained to produce a useful response for a person. Jev is trained to return a decision that software can use directly. TypeSafe calls it a [System One Model](https://typesafe.ai/blog/introducing-system-one-models-and-jev).
+
+[Almeida says](https://x.com/CompleteSkeptic/status/2099925684256899543?s=20) Jev is 20 to 200 times faster and 40 to 400 times cheaper than language models on this kind of work. These are TypeSafe's early results, not independent benchmarks. But the mechanism behind them is worth understanding.
+
+## 02. How Jev works
+
+Suppose an application receives this support message:
+
+```text
+state:    "I changed plans and my invoice doubled."
+question: route_to
+choices:  billing | technical | sales
+```
+
+An LLM generates a string one token at a time. Even in JSON mode, the application receives generated text and then parses and validates it.
+
+Jev does not generate a string. The application defines the possible answers first. Jev scores them in parallel and returns a typed result with probabilities.
+
+```text
+billing:   0.94
+technical: 0.04
+sales:     0.02
+```
+
+The application can route the ticket immediately. It can also ask for human review when the confidence is too low.
+
+| Language model | Jev |
+| --- | --- |
+| Generates text | Returns a typed decision |
+| Samples tokens in sequence | Scores possible answers in parallel |
+| Can produce an unexpected value | Must return one of the allowed values |
+| Confidence is usually another generated claim | Probability is part of the result |
+
+Matija Šošić explains the distinction in this video. Jev behaves like a classifier, but it accepts unstructured text and does not need a new training run for every use case.
+
+<video
+  className="article-video"
+  controls
+  playsInline
+  preload="metadata"
+  poster="https://pbs.twimg.com/amplify_video_thumb/2100190298521337856/img/p7O80DWbiTZbxLWx?format=webp&name=medium"
+>
+  <source
+    src="https://video.twimg.com/amplify_video/2100190298521337856/vid/avc1/1920x1080/ctr_hlp8meBo-glr.mp4?tag=29"
+    type="video/mp4"
+  />
+  <a href="https://x.com/MatijaSosic/status/2100190746389135772/video/1?s=46">
+    Watch Matija Šošić explain how Jev works.
+  </a>
+</video>
+
+The same structure works for an agent controlling a browser or an operating system. The software defines an action map:
+
+```text
+click(button_12)
+scroll_down
+go_back
+ask_for_help
+stop
+```
+
+Jev reads the current state and chooses among actions that exist. It does not spend time writing an explanation or inventing a command outside the map.
+
+This is the promise: Luna-level judgment for a bounded question, without paying a general model to reason and write its way to the answer. TypeSafe reports response times between 70 and 500 milliseconds and a price of $0.042 per million input tokens.
+
+Jev is not a replacement for Luna. It cannot take an open-ended goal, plan a project or write the code. It is useful once the software already knows the question and the possible actions.
+
+## 03. What to do with Jev
+
+The obvious use case is workflow automation. Route a request, classify a transaction, extract a field, score risk or decide whether something needs review.
+
+Agents make the idea more interesting. A general model can plan the unfamiliar work while Jev handles frequent decisions around the plan:
+
+- Is this action allowed?
+- Did the page change as expected?
+- Should the agent retry or stop?
+- Does this result need human review?
+- Did the agent complete the task or only claim that it did?
+
+[Rafal Wilinski used Jev](https://x.com/rafalwilinski/status/2100882207879434359) in a massively parallel browser-testing system that tries to break each release. The browser sessions create the state. Jev judges whether each flow worked, recovered or needs investigation.
 
 <video className="article-video" controls playsInline preload="metadata">
   <source
@@ -31,102 +109,26 @@ That split may matter more than another improvement in chat.
   </a>
 </video>
 
-The demo explains Jev better than a benchmark chart does.
+The price changes what is practical. You can run a decision after every click, tool call or state change. You can inspect thousands of agent traces instead of sampling a few. You can put intelligence into a latency-sensitive product without waiting several seconds for every answer.
 
-The browser sessions do the work. Jev answers small questions about what happened: did the flow recover, did the release behave correctly, should this result be escalated?
+## 04. Why it matters
 
-The surrounding program runs the checks in parallel and reports failures. Jev is not the whole agent. It is a fast decision-maker inside the system.
+We have been using one general model for everything because it was the only useful primitive available. It plans, writes, classifies, routes, checks and decides.
 
-## 02 — Build an action map
+That is convenient, but expensive. It also gives the model freedom where the application needs a narrow answer.
 
-Imagine an agent controlling a browser or an operating system. The application already knows which actions are legal:
+I think the better split is simple. A general model handles goals, planning and unfamiliar work. Jev handles bounded decisions. Deterministic code executes the action, enforces permissions and records what happened.
 
-```text
-click(button_12)
-scroll_down
-go_back
-ask_for_help
-stop
-```
+Cheap decisions will not only reduce AI bills. We will add them to places where a model call never made economic sense. Every action can be checked. Every result can be scored. Low-confidence cases can go to a stronger model or a person.
 
-The agent does not need a paragraph. It needs the right action.
+There is one claim I would treat carefully. TypeSafe says Jev cannot hallucinate. Jev cannot return a value outside the schema, but it can still select the wrong valid answer. Type safety guarantees the shape of a decision, not its truth.
 
-Jev receives the current state, a question and the available choices. It returns probabilities across that action map. The application chooses, asks for review or stops.
-
-> Reliable agents may depend less on better prompts and more on better action maps.
-
-## 03 — LLM input, classifier output
-
-[System One](https://typesafe.ai/blog/introducing-system-one-models-and-jev) is TypeSafe's name for models built to run inside software. Jev is its first public model.
-
-It accepts messy, ordinary text:
-
-```text
-state:    "I changed plans and my invoice doubled."
-question: route_to
-answers:  billing | technical | sales
-```
-
-It returns a value from the allowed set and a probability. The useful abstraction is simple:
-
-> Give the model state and a fixed question. Get back a decision that code can use.
-
-Matija Šošić puts it plainly in [his short explanation](https://x.com/MatijaSosic/status/2100190746389135772): Jev is classifier-like, accepts unstructured text, and does not require a separate training run for every use case.
-
-| Traditional LLM | System One / Jev |
-| --- | --- |
-| Generates a string | Returns a typed decision |
-| Samples token by token | Samples decisions in parallel |
-| Needs parsing before code can act | Fits directly into workflow control |
-
-This is not JSON mode. JSON mode constrains the shape of generated text. Jev gives up text generation and starts with a fixed decision contract.
-
-## 04 — Intelligence cheap enough to disappear
-
-TypeSafe reports 70 to 500 millisecond response times, $0.042 per million input tokens, and gains of 20 to 200 times in speed and 40 to 400 times in cost on its System One tasks.
-
-Those are early, self-reported numbers. And this is not Luna-level general capability. The interesting claim is narrower: small-model-level intelligence on bounded decisions, at a price that makes it practical to call the model constantly.
-
-That changes the architecture. Instead of one visible AI feature, software can contain hundreds of tiny decisions: route, score, retry, inspect, verify and escalate.
-
-If intelligence becomes 100 times cheaper, we will not make the same number of decisions and pocket the savings. We will use intelligence where no model was economical before.
-
-## 05 — Confidence becomes application logic
-
-TypeSafe calls its training method RLCD: Reinforcement Learning for Calibrated Decisions. Every decision includes probabilities, so uncertainty becomes something the application can act on.
-
-| Refund probability | Application response |
-| ---: | --- |
-| 0.96 | Execute automatically |
-| 0.67 | Request approval |
-| 0.31 | Reject |
-
-“Human in the loop” stops being a safety slogan. It becomes a threshold in code.
-
-But TypeSafe's “can't hallucinate” language goes too far. Jev cannot invent an invalid output type. It can still choose the wrong valid answer. Type safety guarantees the shape, not the truth.
-
-## 06 — The nervous system around the agent
-
-Use a general model for goals, planning and unfamiliar work. Use Jev for the fast reflexes around it:
-
-- Is this action permitted?
-- Did the page change as expected?
-- Should the agent retry?
-- Is the result suspicious?
-- Does a human need to see this?
-
-Then let deterministic code execute, enforce permissions and keep the audit trail.
-
-The first generation of AI software put one general model in the middle of everything. The next may use a general model only where the problem is genuinely general.
-
-[TypeSafe raised a $40 million seed round led by DCVC](https://www.dcvc.com/news-insights/typesafe-emerges-from-stealth-with-a-new-way-of-doing-ai/). The money is a bet that software will need many small decisions more often than it needs another paragraph.
-
-The most useful AI model may be the one that writes nothing.
+That does not weaken the main idea. Most software does not need another paragraph. It needs a decision it can afford to request and safely use.
 
 ## Coda
 
-Software can use both kinds of model: one to plan, another to handle the thousands of decisions around the plan.
+Jev matters because it turns model intelligence into a component of software. The program defines the choices. The model handles ambiguity. Code remains responsible for the consequences.
 
-<Coda next="Whether AI becomes more useful when it returns fewer words.">
-TypeSafe is betting that AI becomes easier to compose when the model returns a decision and leaves prose out of the control path.
+<Coda next="Whether useful intelligence becomes cheap enough to appear after every software action.">
+The most useful model in an agent may be the one that writes nothing.
 </Coda>
