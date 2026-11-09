@@ -13,15 +13,14 @@ export function SeriesBadge({
   total: number
 }) {
   return (
-    <p className="text-label text-muted">
+    <p className="text-meta text-muted">
+      {unitLabel(series)} {part} of {total} in{' '}
       <Link
         href={`/series/${series.slug}`}
-        className="text-accent underline underline-offset-3 hover:text-ink"
+        className="text-accent underline underline-offset-4 hover:text-ink"
       >
         {series.title}
       </Link>
-      {' '}&middot;{' '}
-      {unitLabel(series)} {formatPart(part)} of {formatPart(total)}
     </p>
   )
 }
@@ -50,7 +49,7 @@ export function SeriesNav({ context }: { context: SeriesContext }) {
   return (
     <nav
       aria-label={`More in ${series.title}`}
-      className="mt-16 border-t border-rule pt-6"
+      className="mt-16"
     >
       <p className="text-label text-muted">
         More in{' '}

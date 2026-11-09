@@ -1,22 +1,80 @@
 // scripts/build-blog-index.mts
+//
+// Builds lib/posts-runtime/posts.generated.ts: every post's slug, its word
+// count and its opening paragraphs. The site runs on Cloudflare Workers,
+// which cannot read the MDX sources at request time, so anything derived
+// from the text itself is worked out here, at build time.
 import fs from "node:fs"
 import path from "node:path"
 import { glob } from "glob"
-
 
 const ROOT = process.cwd()
 const BLOG_DIR = path.join(ROOT, "posts")
 const OUT_FILE = path.join(ROOT, "lib", "posts-runtime", "posts.generated.ts")
 
+/** The excerpt stops after the paragraph that takes it past this many words. */
+const EXCERPT_MIN_WORDS = 45
+
+/** Drop the `export const metadata = {...}` block and import lines. */
+function body(raw: string) {
+  return raw
+    .replace(/^export\s+const\s+metadata\s*=\s*\{[\s\S]*?\n\};?\s*$/m, "")
+    .replace(/^import\s.*$/gm, "")
+}
+
+/** Markdown inline syntax to plain text. */
+function plain(text: string) {
+  return text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/(^|[\s(])[*_]([^*_]+)[*_]/g, "$1$2")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+}
+
+/** Prose blocks only: no code, JSX, headings, tables, lists or quotes. */
+function proseBlocks(text: string) {
+  const withoutCode = text.replace(/```[\s\S]*?```/g, "")
+  return withoutCode
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .map((block) =>
+      // A paragraph wrapped by <Lede> or <Coda> still counts as prose.
+      block.replace(/^<(Lede|Coda)[^>]*>\s*/, "").replace(/\s*<\/(Lede|Coda)>$/, "").trim()
+    )
+    .filter(
+      (block) =>
+        block.length > 0 && !/^(<|#|\||-\s|\*\s|\d+\.\s|>|\{)/.test(block)
+    )
+}
+
+function countWords(text: string) {
+  return plain(text).split(" ").filter((word) => /[\p{L}\p{N}]/u.test(word)).length
+}
+
 function buildIndex() {
   const files = glob.sync("**/*.mdx", { cwd: BLOG_DIR })
 
   const posts = files.map((file: string) => {
-    const fullPath = path.join(BLOG_DIR, file)
-    const raw = fs.readFileSync(fullPath, "utf8")
+    const raw = fs.readFileSync(path.join(BLOG_DIR, file), "utf8")
     const slug = path.basename(file, ".mdx")
+    const blocks = proseBlocks(body(raw))
 
-    return { slug }
+    const excerpt: string[] = []
+    let excerptWords = 0
+    for (const block of blocks) {
+      if (excerptWords >= EXCERPT_MIN_WORDS) break
+      const paragraph = plain(block)
+      excerpt.push(paragraph)
+      excerptWords += countWords(paragraph)
+    }
+
+    const words = blocks.reduce((sum, block) => sum + countWords(block), 0)
+
+    return { slug, words, excerpt }
   })
 
   const fileContents = `
@@ -25,6 +83,10 @@ function buildIndex() {
 
 export type BlogPost = {
   slug: string
+  /** Words of prose, without code blocks or markup. */
+  words: number
+  /** The opening paragraphs, as plain text, for the home page. */
+  excerpt: string[]
 }
 
 export const ALL_POSTS: BlogPost[] = ${JSON.stringify(posts, null, 2)};
@@ -35,10 +97,4 @@ export const ALL_POSTS: BlogPost[] = ${JSON.stringify(posts, null, 2)};
   console.log(`✅ Blog index generated at ${path.relative(ROOT, OUT_FILE)}`)
 }
 
-
-
-
 buildIndex()
-
-
-

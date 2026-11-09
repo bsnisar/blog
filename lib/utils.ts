@@ -85,7 +85,27 @@ export function tagSlug(tag: string) {
 export type BlogPostData = {
   slug: string;
   metadata: Metadata;
+  /** Words of prose, counted at build time. */
+  words: number;
+  /** The opening paragraphs as plain text, for the home page feed. */
+  excerpt: string[];
 };
+
+/** Reading speed behind "N minutes to read". */
+const WORDS_PER_MINUTE = 220;
+
+export function minutesToRead(words: number) {
+  return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
+}
+
+/** Day first, for the meta line: "9 November 2026". */
+export function formatDateLong(date: string) {
+  return toDate(date).toLocaleString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 /**
  * Read and validate one post. Throws a Error naming the file and the
@@ -136,9 +156,13 @@ async function readPost(slug: string): Promise<BlogPostData> {
     );
   }
 
+  const indexed = ALL_POSTS.find((post) => post.slug === slug);
+
   return {
     slug,
     metadata: { ...metadata, description, tags: metadata.tags ?? [] },
+    words: indexed?.words ?? 0,
+    excerpt: indexed?.excerpt ?? [],
   } as BlogPostData;
 }
 
