@@ -25,7 +25,7 @@ export function PostFeed({ posts }: { posts: BlogPostData[] }) {
 
           <PostMeta post={post} className="mt-3" />
 
-          <div className="mt-5 flex flex-col gap-4">
+          <div className="justified mt-5 flex flex-col gap-4">
             {(post.excerpt.length > 0 ? post.excerpt : [post.metadata.description]).map(
               (paragraph, i) => (
                 <p key={i}>{paragraph}</p>
@@ -73,7 +73,7 @@ export function PostList({ posts, rail = 'date' }: PostListProps) {
             >
               {post.metadata.title}
             </Link>
-            <p className="mt-1 text-meta text-muted">
+            <p className="mt-1 font-sans text-meta tracking-label tabular-nums text-muted">
               {rail === 'part' && series && post.metadata.series ? (
                 <span>
                   {unitLabel(series)} {formatPart(post.metadata.series.part)}

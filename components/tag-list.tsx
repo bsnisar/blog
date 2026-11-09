@@ -17,7 +17,7 @@ export function TagList({
         <li key={tag}>
           <Link
             href={`/tags/${tagSlug(tag)}`}
-            className="block bg-raised px-2 py-0.5 font-mono text-label lowercase text-muted hover:text-accent"
+            className="block bg-raised px-2 py-0.5 font-sans text-label tracking-label lowercase text-muted hover:text-accent"
           >
             {tag}
           </Link>

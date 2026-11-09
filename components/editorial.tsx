@@ -26,7 +26,7 @@ export function Coda({
   return (
     <div className="mt-14">
       <div className="coda text-title italic text-ink">{children}</div>
-      {next ? <p className="mt-4 text-meta text-muted">Next: {next}</p> : null}
+      {next ? <p className="mt-4 font-sans text-meta tracking-label text-muted">Next: {next}</p> : null}
     </div>
   )
 }

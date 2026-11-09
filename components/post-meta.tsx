@@ -4,7 +4,7 @@ import { formatDateLong, minutesToRead, type BlogPostData } from '@/lib/utils'
 export function PostMeta({ post, className = '' }: { post: BlogPostData; className?: string }) {
   const minutes = minutesToRead(post.words)
   return (
-    <p className={`flex flex-wrap gap-x-4 text-meta text-muted ${className}`}>
+    <p className={`flex flex-wrap gap-x-4 font-sans text-meta tracking-label tabular-nums text-muted ${className}`}>
       <time dateTime={post.metadata.publishedAt}>
         {formatDateLong(post.metadata.publishedAt)}
       </time>

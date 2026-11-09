@@ -1,6 +1,7 @@
 import './global.css'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import { GeistSans } from 'geist/font/sans'
 import { IBM_Plex_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -69,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${cmuSerif.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${cmuSerif.variable} ${GeistSans.variable} ${plexMono.variable}`}>
       <body className="bg-paper text-ink antialiased">
         <div className="mx-auto flex min-h-dvh max-w-shell flex-col px-5 pt-12 pb-12 sm:px-8 sm:pt-16">
           <Navbar />

@@ -9,6 +9,8 @@
 @theme {
   /* -- type ------------------------------------------------ */
   --font-serif: var(--font-cmu), "CMU Serif", Georgia, "Times New Roman", serif;
+  /* The labels' voice: dates, counts, tags, captions. Never running text. */
+  --font-sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, Consolas,
     monospace;
 
@@ -18,8 +20,8 @@
   --text-small--line-height: 1.6;
   --text-caption: 1.0625rem;  /* 17 — captions                 */
   --text-caption--line-height: 1.55;
-  --text-meta: 1.125rem;      /* 18 — date, words, minutes     */
-  --text-meta--line-height: 1.5;
+  --text-meta: 0.9375rem;     /* 15 — date, words, minutes (sans) */
+  --text-meta--line-height: 1.6;
   --text-body: 1.25rem;       /* 20 — running text             */
   --text-body--line-height: 1.6;
   --text-nav: 1.3125rem;      /* 21 — the masthead's sections  */
@@ -37,7 +39,7 @@
   --tracking-h1: 0;
   --tracking-h2: 0;
   --tracking-title: 0;
-  --tracking-label: 0;
+  --tracking-label: 0.01em;
 
   /* -- colour ---------------------------------------------- */
   --color-paper: #ffffff;
@@ -116,6 +118,32 @@
     max-width: var(--container-measure);
   }
 
+  /* Set like a paper: justified, with the browser's English hyphenation.
+     Hyphenation stays on at every width; justification waits for a column
+     wide enough (40rem shell) to spread the space without rivers. */
+  .article p,
+  .justified p {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  @media (min-width: 40rem) {
+    .article p,
+    .justified p {
+      text-align: justify;
+    }
+  }
+
+  .article figcaption,
+  .article th {
+    font-family: var(--font-sans);
+  }
+
+  .article figcaption {
+    text-align: left;
+    font-size: var(--text-meta);
+  }
+
   .article > * + *,
   .article .lede > * + * {
     margin-top: --spacing(6);
@@ -126,6 +154,16 @@
     line-height: var(--text-h2--line-height);
     letter-spacing: var(--tracking-h2);
     margin-top: --spacing(14);
+  }
+
+  .article .section-number {
+    display: block;
+    margin-bottom: --spacing(1);
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-accent);
   }
 
   .article h3 {
@@ -252,7 +290,7 @@
 
   .article th {
     text-align: left;
-    font-weight: 700;
+    font-weight: 500;
     font-size: var(--text-label);
     color: var(--color-muted);
     border-bottom: 2px solid var(--color-ink);

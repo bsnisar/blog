@@ -13,7 +13,7 @@ export function SeriesBadge({
   total: number
 }) {
   return (
-    <p className="text-meta text-muted">
+    <p className="font-sans text-meta tracking-label tabular-nums text-muted">
       {unitLabel(series)} {part} of {total} in{' '}
       <Link
         href={`/series/${series.slug}`}
