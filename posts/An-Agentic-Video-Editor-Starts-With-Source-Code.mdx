@@ -70,37 +70,17 @@ No existing open-source library does the whole job anyway. You need a source for
 
 So the only honest path is to build it from scratch, on open libraries (React, zod, three.js, Motion), under MIT. No paid tier, no licence key, no watermark, no asterisk.
 
-## 04. What coding agents already taught us
+## 04. Video needs a compiler
 
-Building from zero is expensive, but it means every design decision can absorb what we already know from watching models work with code.
+Agents are trained to act on the real world through code. They write it, run it, read what went wrong and fix it. That loop is why coding agents work, and the compiler sits in the middle of it: it turns text into something real, and when it cannot, it says what broke and on which line.
 
-The two biggest lessons apply directly.
+Video has no compiler. An agent can write a cut, but nothing tells it the cut lands mid-word or the title covers a face. So the foundation has to be one: a video compiler.
 
-First: reference moments by meaning, not by time. A coding agent refers to a function by name, not by byte offset. A video should work the same way. When you have a transcript, a cut is `in="word:12"`, not `in={8.43}`. A shot boundary is `shot:1`. A silence is `silence:3`. The model reasons in words and shots, so the file should hold words and shots. The software turns them into frame numbers through every trim and speed change. A title anchored to `word:14` stays on that word when you shorten the clip before it.
+It resolves meaning into frames. `word:12` and `shot:1` are looked up in one manifest that holds every asset with its transcript, shots and silences, the way a linker resolves names. The model never sees pixels. The manifest is what it sees.
 
-Second: one manifest for all assets. A model never sees pixels or hears audio. It works from metadata: transcripts with word timings, shot boundaries, silences, durations. Gather all of it into one content manifest, the way a codebase has a `package.json` and a symbol index. The agent looks in one place. A lint checks every `src` and time reference against it and catches mistakes before anything renders.
+It reports errors at the line: a missing asset, a cut inside a word, a title outside the safe zone, a caption over a face. It renders stills so the agent can look at its own work. And it renders the same frames every time, so a video builds like any other program.
 
-Those two are the starting point. Here is what else the foundation needs, and why each one follows from how coding agents already work.
-
-A compiler for video. Agents fix errors they can see. A lint should report a missing asset, a cut that lands inside a word, a title outside the safe zone, and a caption covering a face, at the line number of the element, the way a TypeScript error points at the file and line.
-
-Tests for a cut. Coding agents are strongest when they have a test to pass. A video should be able to state constraints: under 30 seconds, the logo visible in the last two, every spoken number also on screen. The agent iterates until the cut passes all of them.
-
-Visual inspection of the output. Coding agents open a browser to check the UI they built. A video agent should render stills and contact sheets of every cut and graphic, look at them, spot problems, and fix what it sees before handing over.
-
-Git-native history and review. When the project is a text file, every edit is a diff. Git gives you branches for alternate cuts, blame for who changed what, and a review step before anything ships. A client can approve a cut the way an engineering team approves a pull request.
-
-Shared editing between a person and an agent. Every element carries a literal `id`. Drag a clip in the timeline, and one token in the source file changes. The agent reads your edit as code on its next turn. You read the agent's edit the same way. There is no format conversion, no handoff, no "export from the AI tool and import into the real editor."
-
-Components, packages, and themes through npm. Intros, lower thirds, brand kits, and transition presets as React components you install and import. A brand's visual identity is a theme prop on the composition, not a preset buried inside an application.
-
-Variants as build targets. A `schema` and `defaults` export declares what can change without touching the edit. One source file renders 9:16 for Reels and 16:9 for YouTube, ten languages, or a hundred personalised versions, the way one codebase builds for multiple targets.
-
-A deeper index of the footage. Words are the first layer. Faces, objects, and scene descriptions come next, so an agent can cut to "the shot where she holds the product" as easily as to word 12.
-
-Interop with professional tools. The source should import and export through interchange formats like OpenTimelineIO, so a professional editor can finish the cut in Premiere or Resolve without starting over.
-
-Deterministic rendering. The same source produces the same frames on a laptop and in CI. Rendering becomes a build step you can cache and parallelise.
+Give an agent that loop and it iterates until the cut is right, the way it iterates until the tests pass. The rest comes free with a text file: diffs and review in git, components from npm, a variant for every platform as a prop.
 
 ## 05. Where this is today
 
