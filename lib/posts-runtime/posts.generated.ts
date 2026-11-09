@@ -23,9 +23,6 @@ export const ALL_POSTS: BlogPost[] = [
     "slug": "The-Mental-Models-That-Poison-Founders"
   },
   {
-    "slug": "Models-Write-Code-Well-And-Arithmetic-Badly"
-  },
-  {
     "slug": "KISS-or-Die"
   },
   {
@@ -36,5 +33,8 @@ export const ALL_POSTS: BlogPost[] = [
   },
   {
     "slug": "Autonomous-Agents-Need-Constitutions-Not-Bigger-Contexts"
+  },
+  {
+    "slug": "An-Agentic-Video-Editor-Starts-With-Source-Code"
   }
 ];
