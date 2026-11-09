@@ -86,7 +86,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
         }}
       />
 
-      <header className="max-w-measure">
+      <header>
         {series && metadata.series && seriesContext ? (
           <div className="mb-4">
             <SeriesBadge
@@ -99,11 +99,11 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
         <h1 className="text-h1 tracking-h1">{metadata.title}</h1>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-rule pb-4">
+        <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
           <time
             dateTime={metadata.publishedAt}
             title={formatDate(metadata.publishedAt)}
-            className="font-mono text-label tracking-label uppercase text-muted"
+            className="text-label text-muted"
           >
             {formatDateNumeric(metadata.publishedAt)}
           </time>

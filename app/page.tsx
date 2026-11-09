@@ -8,25 +8,18 @@ export const metadata = {
 export default function Page() {
   return (
     <>
-      <section className="max-w-measure">
+      <section>
         <h1 className="text-display tracking-display">
-          Engineer, founder, explorer.
+          Bohdan Snisar
         </h1>
-
-        <p className="mt-8 text-title tracking-title text-muted">
-          I write about building AI products, and about the mindset shift from
-          engineer to founder. Clarity beats complexity, pace beats perfection,
-          decisions beat theory.
+        <p className="mt-4 text-title text-muted">
+          I write about building AI products, startup execution, and the
+          mindset shift from engineer to founder.
         </p>
       </section>
 
-      <section className="mt-20">
-        <h2 className="border-b border-ink pb-3 font-mono text-label tracking-label uppercase text-muted">
-          Writing
-        </h2>
-        <div className="mt-2">
-          <BlogPosts />
-        </div>
+      <section className="mt-14">
+        <BlogPosts />
       </section>
     </>
   )

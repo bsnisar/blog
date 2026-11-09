@@ -13,22 +13,20 @@ export function SeriesBadge({
   total: number
 }) {
   return (
-    <p className="font-mono text-label tracking-label uppercase text-muted">
+    <p className="text-label text-muted">
       <Link
         href={`/series/${series.slug}`}
-        className="text-ink underline-offset-4 hover:underline"
+        className="text-accent underline underline-offset-3 hover:text-ink"
       >
         {series.title}
       </Link>
-      <span aria-hidden> · </span>
-      <span>
-        {unitLabel(series)} {formatPart(part)} of {formatPart(total)}
-      </span>
+      {' '}&middot;{' '}
+      {unitLabel(series)} {formatPart(part)} of {formatPart(total)}
     </p>
   )
 }
 
-/** A quieter marker for list rows, where the title is already the link. */
+/** A quieter marker for list rows. */
 export function SeriesMarker({
   series,
   part,
@@ -37,13 +35,13 @@ export function SeriesMarker({
   part: number
 }) {
   return (
-    <p className="font-mono text-label tracking-label uppercase text-muted">
-      {series.title} · {unitLabel(series)} {formatPart(part)}
+    <p className="text-label text-muted">
+      {series.title} &middot; {unitLabel(series)} {formatPart(part)}
     </p>
   )
 }
 
-/** Read-next navigation, shown only when the series has somewhere to go. */
+/** Read-next navigation. */
 export function SeriesNav({ context }: { context: SeriesContext }) {
   const { previous, next, series } = context
 
@@ -52,23 +50,23 @@ export function SeriesNav({ context }: { context: SeriesContext }) {
   return (
     <nav
       aria-label={`More in ${series.title}`}
-      className="mt-20 border-t border-ink pt-6"
+      className="mt-16 border-t border-rule pt-6"
     >
-      <p className="font-mono text-label tracking-label uppercase text-muted">
+      <p className="text-label text-muted">
         More in{' '}
         <Link
           href={`/series/${series.slug}`}
-          className="text-ink underline-offset-4 hover:underline"
+          className="text-accent underline underline-offset-3 hover:text-ink"
         >
           {series.title}
         </Link>
       </p>
 
-      <div className="mt-6 grid gap-8 sm:grid-cols-2">
+      <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:justify-between">
         {previous ? (
           <SeriesLink post={previous} series={series} direction="Previous" />
         ) : (
-          <div aria-hidden />
+          <div />
         )}
         {next ? (
           <SeriesLink
@@ -97,7 +95,7 @@ function SeriesLink({
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
       <span
-        className={`block font-mono text-label tracking-label uppercase text-muted ${
+        className={`block text-label text-muted ${
           align === 'right' ? 'sm:text-right' : ''
         }`}
       >
@@ -106,7 +104,7 @@ function SeriesLink({
         {direction === 'Next' ? ' →' : ''}
       </span>
       <span
-        className={`mt-2 block text-caption tracking-title text-ink underline-offset-4 group-hover:underline ${
+        className={`mt-1 block text-caption text-ink group-hover:text-accent ${
           align === 'right' ? 'sm:text-right' : ''
         }`}
       >

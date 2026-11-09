@@ -1,16 +1,17 @@
 import './global.css'
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
+import { Source_Serif_4, IBM_Plex_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Navbar } from '@/components/nav'
 import { Footer } from '@/components/footer'
 import { baseUrl } from './sitemap'
 
-const plexSans = IBM_Plex_Sans({
+const sourceSerif = Source_Serif_4({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-plex-sans',
+  weight: ['400', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
   display: 'swap',
 })
 
@@ -24,17 +25,15 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Bohdan Snisar — Founder, Engineer',
+    default: 'Bohdan Snisar',
     template: '%s | Bohdan Snisar',
   },
   description:
-    'Founder and AI architect writing about building products, mindset shifts, and the craft of creating in the era of LLMs.',
-  // No `alternates` here: page-level alternates replace rather than merge,
-  // so each page builds its own with lib/metadata's helper.
+    'Writing about building AI products, startup execution, and the mindset shift from engineer to founder.',
   openGraph: {
-    title: 'Bohdan Snisar — Insights on AI, Product Building, and Founder Mindset',
+    title: 'Bohdan Snisar',
     description:
-      'Sharp, practical writing on AI engineering, startup execution, and the mindset behind building meaningful products.',
+      'Writing about building AI products, startup execution, and the mindset shift from engineer to founder.',
     url: baseUrl,
     siteName: 'Bohdan Snisar',
     locale: 'en_US',
@@ -59,11 +58,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${plexSans.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${sourceSerif.variable} ${plexMono.variable}`}>
       <body className="bg-paper text-ink antialiased">
-        <div className="mx-auto flex min-h-dvh max-w-shell flex-col px-5 pt-12 pb-16 sm:px-8">
+        <div className="mx-auto flex min-h-dvh max-w-shell flex-col px-5 pt-8 pb-16 sm:px-8 sm:pt-12">
           <Navbar />
-          <main className="flex-auto pt-12">{children}</main>
+          <main className="flex-auto pt-10 sm:pt-14">{children}</main>
           <Footer />
         </div>
         <Analytics />

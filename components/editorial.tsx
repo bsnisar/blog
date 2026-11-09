@@ -5,13 +5,12 @@
  */
 
 /**
- * The standfirst: the argument stated before the evidence. Set larger than
- * body text and closed with a rule, so a reader who stops here still leaves
- * with the position.
+ * The standfirst: the argument stated before the evidence. Larger than
+ * body text, italic, closed with a rule.
  */
 export function Lede({ children }: { children: React.ReactNode }) {
   return (
-    <div className="lede border-b border-ink pb-8 text-title tracking-title text-ink">
+    <div className="lede border-b border-rule pb-8 text-title italic text-ink">
       {children}
     </div>
   )
@@ -28,16 +27,13 @@ export function Coda({
   children: React.ReactNode
 }) {
   return (
-    <div className="mt-16 border-t border-ink pt-6">
-      <div className="coda max-w-measure text-title tracking-title text-ink">
+    <div className="mt-16 border-t border-rule pt-6">
+      <div className="coda text-title font-bold text-ink">
         {children}
       </div>
       {next ? (
-        <p className="mt-6 flex flex-wrap items-baseline gap-x-3">
-          <span className="font-mono text-label tracking-label uppercase text-faint">
-            Next
-          </span>
-          <span className="text-caption text-muted">{next}</span>
+        <p className="mt-4 text-caption text-muted italic">
+          Next: {next}
         </p>
       ) : null}
     </div>
