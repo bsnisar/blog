@@ -86,7 +86,7 @@ export const ALL_POSTS: BlogPost[] = [
   },
   {
     "slug": "An-Agentic-Video-Editor-Starts-With-Source-Code",
-    "words": 1462,
+    "words": 1044,
     "excerpt": [
       "Coding agents edit code because code is text. Video projects are binary blobs that only Premiere and Resolve can open. No agent can read a .prproj file.",
       "The answer is not a smarter agent. It is a different format. A video project written as source code, in plain React, where an agent edits video the same way it edits a web app."
