@@ -23,6 +23,9 @@ export const ALL_POSTS: BlogPost[] = [
     "slug": "The-Mental-Models-That-Poison-Founders"
   },
   {
+    "slug": "Models-Write-Code-Well-And-Arithmetic-Badly"
+  },
+  {
     "slug": "KISS-or-Die"
   },
   {
