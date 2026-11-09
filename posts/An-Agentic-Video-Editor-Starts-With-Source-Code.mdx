@@ -1,0 +1,124 @@
+export const metadata = {
+  title: "An agentic video editor starts with video as source code",
+  publishedAt: '2026-11-09',
+  description: "Coding agents work because code is text they can read, change and check. Video projects are binary blobs an agent cannot touch. The fix is not a better agent. It is a better format: video as plain React, open source, built from scratch.",
+  series: { slug: 'opinionated-ai', part: 5 },
+  tags: ['AI', 'Agents', 'Video', 'Open Source', 'Engineering'],
+};
+
+<Lede>
+Coding agents edit code because code is text. Video projects are binary blobs that only Premiere and Resolve can open. No agent can read a `.prproj` file.
+
+The answer is not a smarter agent. It is a different format. A video project written as source code, in plain React, where an agent edits video the same way it edits a web app.
+</Lede>
+
+## 01. Why agents fail at video
+
+A coding agent opens a file, changes three lines, runs the compiler, reads the error on line 42, and fixes it. The change is a diff. The diff goes into a pull request. A person reviews it. This works because code is text, and text is the one format models are genuinely good at.
+
+A Premiere Pro project is a compressed XML blob referencing media by absolute paths, internal GUIDs and opaque time codes. A DaVinci Resolve project is a PostgreSQL database. Neither is something a model can read, reason about, or change with a string replacement.
+
+So the industry built workarounds.
+
+Workaround one: give the agent a catalog of a hundred tool calls. `trim_clip`, `add_keyframe`, `insert_transition`. The agent picks tools one at a time. This is the equivalent of editing code through a hundred-button remote control instead of opening the file. Models are measurably worse at choosing among many tools than at writing text. The catalog also has to track every feature the editor ships, forever.
+
+Workaround two: let the agent generate timestamps. The model says "cut at 8.43 seconds." The cut lands in the middle of a word. The model knew the right sentence. It got the number wrong, because models cannot do arithmetic reliably.
+
+Both workarounds exist because the project format is closed. Open the format, and you do not need either.
+
+## 02. Video as source code
+
+Here is what I mean by "source code." One TSX file is the entire project. Tracks, clips, transitions, titles, captions, keyframes, effects, audio, colour grading. Everything Premiere and Resolve do, represented as React elements in a file a model can read and a person can open.
+
+```tsx
+export default function Launch({ product, features }: Props) {
+  return (
+    <Composition fps={30} width={1080} height={1920}>
+      <Track id="main">
+        <Clip id="hook" src="asset:founder" in="word:12" out="word:23.end" />
+        <Transition id="x1" type="crossfade" duration={0.4} />
+        <Clip id="demo" src="asset:product" in="shot:1" out="shot:1.end" />
+      </Track>
+      <Track id="overlays">
+        <Title id="name" anchor="hook" at="word:14" duration={2.8}>{product}</Title>
+        {/* Pill is your own component */}
+        {features.map((f) => <Pill key={f.word} anchor="demo" at={f.word}>{f.label}</Pill>)}
+      </Track>
+    </Composition>
+  );
+}
+```
+
+Not React-shaped configuration. Real React. A nested sequence is a component you import. A template is a function that takes props. A list of product features is a `.map()`. Whatever the timeline elements do not cover, you draw yourself with CSS, canvas, three.js or Motion, running on the video's clock.
+
+No project file beside it. The player plays this file. The editor edits this file. The export renders this file. One source of truth, the same way a web app is one codebase.
+
+The end goal is not "a DSL that covers the easy 20%." It is Premiere's full power as a file format any text editor, any model, and any script can work with: multitrack timelines, ripple and roll trims, speed ramps, freeze frames, colour grading with LUTs and curves, chroma keying, masks, audio ducking, captions from the transcript. All of it as elements with props and Zod schemas.
+
+<figure>
+  <img src="/images/cutcraft/launch.gif" alt="A product launch: a three.js phone turns beside the founder while each feature appears as a pill on the word that names it" />
+  <figcaption className="mt-2 text-caption text-muted">A launch video from one TSX file. Each feature appears on the word that names it.</figcaption>
+</figure>
+
+## 03. Why it has to be open source, and why it has to be from scratch
+
+If every video an agent produces is built on this foundation, the foundation's licence becomes part of everything built on it. So the licence matters.
+
+The two closest projects both have strings attached. Remotion has a paid tier for companies above a revenue threshold. Diffusion Studio stamps a watermark on every frame unless you buy a licence key. Build on either, and your product inherits those terms.
+
+No existing open-source library does the whole job anyway. You need a source format a model can write, a player that seeks to any frame, an editor that writes changes back into the source file, and an export that produces the same frames as the preview. Nobody ships all four under a permissive licence.
+
+So the only honest path is to build it from scratch, on open libraries (React, zod, three.js, Motion), under MIT. No paid tier, no licence key, no watermark, no asterisk.
+
+## 04. What coding agents already taught us
+
+Building from zero is expensive, but it means every design decision can absorb what we already know from watching models work with code.
+
+The two biggest lessons apply directly.
+
+First: reference moments by meaning, not by time. A coding agent refers to a function by name, not by byte offset. A video should work the same way. When you have a transcript, a cut is `in="word:12"`, not `in={8.43}`. A shot boundary is `shot:1`. A silence is `silence:3`. The model reasons in words and shots, so the file should hold words and shots. The software turns them into frame numbers through every trim and speed change. A title anchored to `word:14` stays on that word when you shorten the clip before it.
+
+Second: one manifest for all assets. A model never sees pixels or hears audio. It works from metadata: transcripts with word timings, shot boundaries, silences, durations. Gather all of it into one content manifest, the way a codebase has a `package.json` and a symbol index. The agent looks in one place. A lint checks every `src` and time reference against it and catches mistakes before anything renders.
+
+Those two are the starting point. Here is what else the foundation needs, and why each one follows from how coding agents already work.
+
+A compiler for video. Agents fix errors they can see. A lint should report a missing asset, a cut that lands inside a word, a title outside the safe zone, and a caption covering a face, at the line number of the element, the way a TypeScript error points at the file and line.
+
+Tests for a cut. Coding agents are strongest when they have a test to pass. A video should be able to state constraints: under 30 seconds, the logo visible in the last two, every spoken number also on screen. The agent iterates until the cut passes all of them.
+
+Visual inspection of the output. Coding agents open a browser to check the UI they built. A video agent should render stills and contact sheets of every cut and graphic, look at them, spot problems, and fix what it sees before handing over.
+
+Git-native history and review. When the project is a text file, every edit is a diff. Git gives you branches for alternate cuts, blame for who changed what, and a review step before anything ships. A client can approve a cut the way an engineering team approves a pull request.
+
+Shared editing between a person and an agent. Every element carries a literal `id`. Drag a clip in the timeline, and one token in the source file changes. The agent reads your edit as code on its next turn. You read the agent's edit the same way. There is no format conversion, no handoff, no "export from the AI tool and import into the real editor."
+
+Components, packages, and themes through npm. Intros, lower thirds, brand kits, and transition presets as React components you install and import. A brand's visual identity is a theme prop on the composition, not a preset buried inside an application.
+
+Variants as build targets. A `schema` and `defaults` export declares what can change without touching the edit. One source file renders 9:16 for Reels and 16:9 for YouTube, ten languages, or a hundred personalised versions, the way one codebase builds for multiple targets.
+
+A deeper index of the footage. Words are the first layer. Faces, objects, and scene descriptions come next, so an agent can cut to "the shot where she holds the product" as easily as to word 12.
+
+Interop with professional tools. The source should import and export through interchange formats like OpenTimelineIO, so a professional editor can finish the cut in Premiere or Resolve without starting over.
+
+Deterministic rendering. The same source produces the same frames on a laptop and in CI. Rendering becomes a build step you can cache and parallelise.
+
+## 05. Where this is today
+
+This is the goal. Two projects are working toward it.
+
+[CutCraft](https://prefix-tree.github.io/cutcraft/) is the open-source foundation. It already resolves word and shot references against a manifest, gives every element an id, writes editor gestures back into the file as the smallest text change, lints the file, plays it in the browser, and exports frame-exact video. Version 0.3, MIT, [source on GitHub](https://github.com/prefix-tree/cutcraft).
+
+[Cutleap](https://cutleap.com/) is the agentic video editor we are building on top of it. Upload your clips, say what you want, and Cutleap does the editing. It is in early access and free while it is. If you run your own business and never have a spare evening to edit, [join the list](https://cutleap.com/).
+
+<figure>
+  <img src="/images/cutcraft/data.gif" alt="A data story: bars grow on the words that say the numbers, then the percentages count up" />
+  <figcaption className="mt-2 text-caption text-muted">A data story built with CutCraft. The bars grow on the words that say the numbers.</figcaption>
+</figure>
+
+## Coda
+
+Agents did not learn to edit code by receiving a hundred buttons. They learned on a format they could read and write as text. Video editing will not get a good agent until it gets the same kind of format. Build that format in the open, under a licence with no strings, and every tool on top of it gets better, including ours.
+
+<Coda next="What else breaks when agents work with formats designed only for GUIs.">
+Before the agent, the source.
+</Coda>
