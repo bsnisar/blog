@@ -1,73 +1,79 @@
 @import "tailwindcss";
 
 /* ============================================================
-   QUIET SWISS — design tokens
-   Hierarchy from size, weight and space. Never from colour.
+   Book — a personal blog that looks like it was written, not
+   designed. Serif body, generous white space, the text carries
+   itself. Inspired by yegor256.com.
    ============================================================ */
 
 @theme {
   /* -- type ------------------------------------------------ */
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", sans-serif;
+  --font-serif: var(--font-cmu), "CMU Serif", Georgia, "Times New Roman", serif;
+  /* The labels' voice: dates, counts, tags, captions. Never running text. */
+  --font-sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, Consolas,
     monospace;
 
-  --text-label: 0.75rem;      /* 12 — mono labels, dates, tags   */
+  --text-label: 0.875rem;     /* 14 — tags, code labels        */
   --text-label--line-height: 1.5;
-  --text-small: 0.8125rem;    /* 13 — footnotes, table cells     */
-  --text-small--line-height: 1.55;
-  --text-caption: 0.9375rem;  /* 15 — summaries, captions        */
+  --text-small: 0.9375rem;    /* 15 — code, table cells        */
+  --text-small--line-height: 1.6;
+  --text-caption: 1.0625rem;  /* 17 — captions                 */
   --text-caption--line-height: 1.55;
-  --text-body: 1.0625rem;     /* 17 — running text               */
-  --text-body--line-height: 1.65;
-  --text-title: 1.25rem;      /* 20 — post-list titles, lead     */
+  --text-meta: 0.9375rem;     /* 15 — date, words, minutes (sans) */
+  --text-meta--line-height: 1.6;
+  --text-body: 1.25rem;       /* 20 — running text             */
+  --text-body--line-height: 1.6;
+  --text-nav: 1.3125rem;      /* 21 — the masthead's sections  */
+  --text-nav--line-height: 1.5;
+  --text-title: 1.5rem;       /* 24 — list titles, coda        */
   --text-title--line-height: 1.3;
-  --text-h2: 1.5rem;          /* 24 */
+  --text-h2: 1.875rem;        /* 30 — sections inside a post   */
   --text-h2--line-height: 1.25;
-  --text-h1: 2rem;            /* 32 — article title              */
+  --text-h1: 2.875rem;        /* 46 — a post's title           */
   --text-h1--line-height: 1.12;
-  --text-display: 2.75rem;    /* 44 — page display, the ceiling  */
-  --text-display--line-height: 1.05;
+  --text-display: 2.875rem;   /* 46 — page headings            */
+  --text-display--line-height: 1.12;
 
-  --tracking-display: -0.035em;
-  --tracking-h1: -0.03em;
-  --tracking-h2: -0.02em;
-  --tracking-title: -0.015em;
-  --tracking-label: 0.1em;
+  --tracking-display: 0;
+  --tracking-h1: 0;
+  --tracking-h2: 0;
+  --tracking-title: 0;
+  --tracking-label: 0.01em;
 
   /* -- colour ---------------------------------------------- */
-  --color-paper: #fbfbfa;
-  --color-raised: #f3f3f1;
-  --color-ink: #14161a;
-  --color-muted: #6b7078;
-  --color-faint: #9aa0a6;
-  --color-rule: #e4e4e1;
-  --color-hair: #efefec;
-  --color-accent: #c0292f;
+  --color-paper: #ffffff;
+  --color-raised: #e8e8e8;
+  --color-ink: #1a1a1a;
+  --color-muted: #5c5c5c;
+  --color-faint: #8a8a8a;
+  --color-rule: #dcdcdc;
+  --color-hair: #efefef;
+  --color-accent: #b3202a;
+  --color-code: #f5f5f5;
 
-  /* -- measure & grid -------------------------------------- */
-  --container-shell: 43rem;   /* 688 — page container           */
-  --container-measure: 65ch;  /* prose measure                  */
-  --rail: 9.25rem;            /* 148 — mono label / date column */
+  /* -- measure --------------------------------------------- */
+  --container-shell: 40rem;   /* 640 — one column, like a page */
+  --container-measure: 40rem;
+  --rail: 7rem;
 }
 
-/* Dark is a deliberate second set, not an inversion: ink stops
-   short of white, and the accent lifts so it holds on near-black. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-paper: #0e1012;
-    --color-raised: #16191c;
-    --color-ink: #ededea;
-    --color-muted: #8e949c;
-    --color-faint: #6c7278;
-    --color-rule: #25282c;
-    --color-hair: #1c1f23;
-    --color-accent: #f0625c;
+    --color-paper: #111111;
+    --color-raised: #262626;
+    --color-ink: #e8e8e4;
+    --color-muted: #999999;
+    --color-faint: #666666;
+    --color-rule: #2a2a2a;
+    --color-hair: #1e1e1e;
+    --color-accent: #e85050;
+    --color-code: #1c1c1c;
   }
 }
 
 /* ============================================================
-   Base — MDX renders through these, so posts need no classes.
+   Base
    ============================================================ */
 
 @layer base {
@@ -75,13 +81,10 @@
     color-scheme: light dark;
   }
 
-  /* Keep the root at the browser default so 1rem stays 16px and the
-     type scale lands on its literal pixel values. Body sets the
-     reading size; it is not the root size. */
   html {
     background-color: var(--color-paper);
     color: var(--color-ink);
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
   }
 
   body {
@@ -91,7 +94,7 @@
 
   ::selection {
     background-color: var(--color-accent);
-    color: var(--color-paper);
+    color: #fff;
   }
 
   :focus-visible {
@@ -99,18 +102,15 @@
     outline-offset: 3px;
   }
 
+  /* Computer Modern titles are set in the book weight, as in a paper. */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    text-wrap: balance;
+    font-weight: 400;
+    text-wrap: pretty;
   }
 }
 
 /* ============================================================
-   Article — the one place we style descendants, because MDX
-   output carries no classes of its own.
-
-   Layered as components so a utility class on an element inside
-   .article still wins; unlayered rules would outrank every utility.
+   Article — descendant styles for MDX output.
    ============================================================ */
 
 @layer components {
@@ -118,7 +118,34 @@
     max-width: var(--container-measure);
   }
 
-  .article > * + * {
+  /* Set like a paper: justified, with the browser's English hyphenation.
+     Hyphenation stays on at every width; justification waits for a column
+     wide enough (40rem shell) to spread the space without rivers. */
+  .article p,
+  .justified p {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  @media (min-width: 40rem) {
+    .article p,
+    .justified p {
+      text-align: justify;
+    }
+  }
+
+  .article figcaption,
+  .article th {
+    font-family: var(--font-sans);
+  }
+
+  .article figcaption {
+    text-align: left;
+    font-size: var(--text-meta);
+  }
+
+  .article > * + *,
+  .article .lede > * + * {
     margin-top: --spacing(6);
   }
 
@@ -126,85 +153,71 @@
     font-size: var(--text-h2);
     line-height: var(--text-h2--line-height);
     letter-spacing: var(--tracking-h2);
-    margin-top: --spacing(12);
+    margin-top: --spacing(14);
+  }
+
+  .article .section-number {
+    display: block;
+    margin-bottom: --spacing(1);
+    font-family: var(--font-sans);
+    font-size: var(--text-meta);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-label);
+    color: var(--color-accent);
   }
 
   .article h3 {
     font-size: var(--text-title);
     line-height: var(--text-title--line-height);
     letter-spacing: var(--tracking-title);
-    margin-top: --spacing(10);
+    margin-top: --spacing(12);
   }
 
+  /* Links read as red words, as on a printed page with no underline. */
   .article a {
     color: var(--color-accent);
     text-decoration: none;
-    border-bottom: 1px solid currentColor;
+  }
+
+  .article a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .article strong {
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .article ul,
   .article ol {
-    padding-left: 0;
-    list-style: none;
+    padding-left: 1.5em;
+  }
+
+  .article ul {
+    list-style: disc;
+  }
+
+  .article ol {
+    list-style: decimal;
   }
 
   .article li + li {
     margin-top: --spacing(2);
   }
 
-  .article ul > li {
-    position: relative;
-    padding-left: --spacing(6);
-  }
-
-  /* A flat rule, not a bullet — the same hairline used everywhere else. */
-  .article ul > li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.72em;
-    width: 8px;
-    height: 1px;
-    background-color: var(--color-faint);
-  }
-
-  .article ol {
-    counter-reset: item;
-  }
-
-  .article ol > li {
-    position: relative;
-    padding-left: --spacing(8);
-    counter-increment: item;
-  }
-
-  .article ol > li::before {
-    content: counter(item, decimal-leading-zero);
-    position: absolute;
-    left: 0;
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
+  .article li::marker {
     color: var(--color-faint);
   }
 
-  .article :is(.lede, .coda) > * + * {
+  .article .coda > * + * {
     margin-top: --spacing(4);
   }
 
-  .article :is(.lede, .coda) p {
-    line-height: 1.5;
-  }
-
   .article blockquote {
-    border-left: 2px solid var(--color-ink);
+    border-left: 3px solid var(--color-rule);
     padding-left: --spacing(6);
-    font-size: var(--text-title);
-    line-height: 1.5;
-    letter-spacing: -0.01em;
+    font-style: italic;
+    color: var(--color-muted);
   }
 
   .article blockquote p + p {
@@ -214,29 +227,26 @@
   .article hr {
     border: 0;
     border-top: 1px solid var(--color-rule);
-    margin-block: --spacing(12);
+    margin-block: --spacing(14);
   }
 
   .article code {
     font-family: var(--font-mono);
-    font-size: 0.9em;
-    background-color: var(--color-raised);
-    border: 1px solid var(--color-rule);
-    padding: 0.1em 0.35em;
+    font-size: 0.8em;
+    background-color: var(--color-code);
+    padding: 0.15em 0.4em;
   }
 
   .article pre {
-    background-color: var(--color-raised);
-    border: 1px solid var(--color-rule);
-    padding: --spacing(4);
+    background-color: var(--color-code);
+    padding: --spacing(5);
     overflow-x: auto;
     font-size: var(--text-small);
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   .article pre code {
     background: none;
-    border: 0;
     padding: 0;
     font-size: inherit;
   }
@@ -280,18 +290,15 @@
 
   .article th {
     text-align: left;
-    font-family: var(--font-mono);
     font-weight: 500;
     font-size: var(--text-label);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
     color: var(--color-muted);
-    border-bottom: 1px solid var(--color-ink);
+    border-bottom: 2px solid var(--color-ink);
     padding: 0 --spacing(4) --spacing(2) 0;
   }
 
   .article td {
-    border-bottom: 1px solid var(--color-hair);
+    border-bottom: 1px solid var(--color-rule);
     padding: --spacing(3) --spacing(4) --spacing(3) 0;
     vertical-align: top;
   }

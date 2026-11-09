@@ -51,19 +51,17 @@ export default async function TagPage({ params }: TagPageProps) {
 
   return (
     <section>
-      <p className="font-mono text-label tracking-label uppercase text-muted">
-        Tag
-      </p>
-      <h1 className="mt-4 text-h1 tracking-h1">{tag.label}</h1>
+      <p className="text-label text-muted">Tag</p>
+      <h1 className="mt-2 text-display tracking-display">{tag.label}</h1>
 
-      <div className="mt-12 flex items-baseline justify-between border-b border-ink pb-3 font-mono text-label tracking-label uppercase text-muted">
+      <div className="mt-12 flex items-baseline justify-between pb-3 text-label text-muted">
         <span>Writing</span>
         <span>
           {posts.length} {posts.length === 1 ? 'post' : 'posts'}
         </span>
       </div>
 
-      <div className="mt-2">
+      <div>
         <PostList posts={posts} />
       </div>
     </section>

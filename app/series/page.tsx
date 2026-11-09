@@ -15,29 +15,29 @@ export default async function SeriesIndex() {
 
   return (
     <section>
-      <h1 className="text-h1 tracking-h1">Series</h1>
-      <p className="mt-4 max-w-measure text-title tracking-title text-muted">
+      <h1 className="text-display tracking-display">Series</h1>
+      <p className="mt-4 text-title text-muted">
         Longer arcs, written to be read in order.
       </p>
 
-      <ul className="mt-12 flex flex-col border-t border-ink">
+      <ul className="mt-12 flex flex-col">
         {series.map((entry) => (
-          <li key={entry.slug} className="group border-b border-hair py-6">
-            <div className="grid gap-2 sm:grid-cols-[var(--rail)_minmax(0,1fr)] sm:gap-8">
-              <p className="font-mono text-label tracking-label uppercase tabular-nums text-muted sm:pt-1">
+          <li key={entry.slug} className="group border-b border-hair py-6 last:border-0">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-6">
+              <p className="shrink-0 text-label tabular-nums text-muted sm:w-[var(--rail)]">
                 {entry.posts.length} {unitLabel(entry, entry.posts.length)}
               </p>
 
               <div>
-                <h2 className="text-title font-medium tracking-title text-ink">
+                <h2 className="text-title font-bold text-ink">
                   <Link
                     href={`/series/${entry.slug}`}
-                    className="underline-offset-4 group-hover:underline"
+                    className="hover:text-accent"
                   >
                     {entry.title}
                   </Link>
                 </h2>
-                <p className="mt-2 max-w-measure text-caption text-muted">
+                <p className="mt-1 text-caption text-muted">
                   {entry.description}
                 </p>
               </div>

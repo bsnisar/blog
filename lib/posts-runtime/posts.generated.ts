@@ -4,37 +4,92 @@
 
 export type BlogPost = {
   slug: string
+  /** Words of prose, without code blocks or markup. */
+  words: number
+  /** The opening paragraphs, as plain text, for the home page. */
+  excerpt: string[]
 }
 
 export const ALL_POSTS: BlogPost[] = [
   {
-    "slug": "Vibe-Coding-Made-Computer-Science-More-Important"
+    "slug": "Vibe-Coding-Made-Computer-Science-More-Important",
+    "words": 1295,
+    "excerpt": [
+      "Vibe coding was sold on a simple promise: natural language would replace programming language. Describe the product, watch the agent build it, and forget the code exists.",
+      "A new ETH Zurich study tested that promise. Writing skill helped people vibe code. Computer-science knowledge helped more."
+    ]
   },
   {
-    "slug": "VC-Is-Quietly-Drawing-The-Post-Agent-Stack"
+    "slug": "VC-Is-Quietly-Drawing-The-Post-Agent-Stack",
+    "words": 1133,
+    "excerpt": [
+      "$2 billion into coding agents. $50 million into agent supply-chain security. $21 million into infrastructure agents. $4 million into selling software to agents.",
+      "Together, the rounds sketch an architecture diagram of the post-agent software stack. Venture capital is betting that the coding model is only the first layer where serious value will accumulate."
+    ]
   },
   {
-    "slug": "The-Wrapper-Era-Ended-On-A-Contract-Clause"
+    "slug": "The-Wrapper-Era-Ended-On-A-Contract-Clause",
+    "words": 981,
+    "excerpt": [
+      "OpenAI cutting Cursor after SpaceX's $60 billion takeover, and Anthropic lining up a trillion-dollar IPO, are not two headlines. They are the same move from different floors: model, compute, and distribution collapsing into a few full-stack empires. The application layer is no longer allowed to stay neutral."
+    ]
   },
   {
-    "slug": "The-Model-Got-Better-The-Environment-Had-To-Catch-Up"
+    "slug": "The-Model-Got-Better-The-Environment-Had-To-Catch-Up",
+    "words": 736,
+    "excerpt": [
+      "The AI internet has spent the week buzzing about Jev, a model that cannot write.",
+      "That limitation is the interesting part. TypeSafe removed text generation to make Jev fast, cheap and easier to place inside ordinary software.",
+      "TypeSafe released Jev on September 15 after two years in stealth. Its founder, Diogo Almeida, worked on the research behind ChatGPT. He started the company with a question: if chat models are so capable, why have they automated so little work?"
+    ]
   },
   {
-    "slug": "The-Mental-Models-That-Poison-Founders"
+    "slug": "The-Mental-Models-That-Poison-Founders",
+    "words": 175,
+    "excerpt": [
+      "We do not see reality. We see reality through a lens.",
+      "Every person carries a paradigm — a mental map built from experience, fear, identity, and the stories we tell ourselves about how the world works. This map is not reality but a filter that decides what we notice and what we ignore, what feels like opportunity and what feels like threat, what seems reasonable and what seems absurd."
+    ]
   },
   {
-    "slug": "KISS-or-Die"
+    "slug": "KISS-or-Die",
+    "words": 1791,
+    "excerpt": [
+      "We do not see reality. We see reality through a lens.",
+      "Every person carries a paradigm — a mental map built from experience, fear, identity, and the stories we tell ourselves about how the world works. This map is not reality but a filter that decides what we notice and what we ignore, what feels like opportunity and what feels like threat, what seems reasonable and what seems absurd."
+    ]
   },
   {
-    "slug": "Instinct-Can-Build-AIs-Next-Great-Moat"
+    "slug": "Instinct-Can-Build-AIs-Next-Great-Moat",
+    "words": 1591,
+    "excerpt": [
+      "Instinct raised $250 million at a $2.5 billion valuation while its personal assistant was still in private access. It has now raised $350 million in total. A few weeks earlier, investors valued it at just over $500 million.",
+      "The number looks deranged, even by current AI standards. I think investors see one of the first application-layer AI companies that could have a serious moat before distribution creates one."
+    ]
   },
   {
-    "slug": "Context-Windows-Are-RAM-Not-Memory"
+    "slug": "Context-Windows-Are-RAM-Not-Memory",
+    "words": 626,
+    "excerpt": [
+      "GPT-6 Astra arrived with a 1.05 million-token context window. Everyone will post the benchmarks. I think the more important launch happened around the model.",
+      "Codex can carry useful context from earlier work into future sessions through local memory files. Context windows are starting to look like RAM: large, expensive working space that still needs a durable system behind it."
+    ]
   },
   {
-    "slug": "Autonomous-Agents-Need-Constitutions-Not-Bigger-Contexts"
+    "slug": "Autonomous-Agents-Need-Constitutions-Not-Bigger-Contexts",
+    "words": 952,
+    "excerpt": [
+      "The industry is trying to make coding agents autonomous by giving them more time. Longer context windows. More tokens. More tools. More retries.",
+      "That produces agents that can work longer. It does not prove they are doing useful work.",
+      "Autonomy is less about the model than the system around it. An agent is trustworthy only while that system can expose consequences, preserve what it learns, and stop it from rewriting the definition of success."
+    ]
   },
   {
-    "slug": "An-Agentic-Video-Editor-Starts-With-Source-Code"
+    "slug": "An-Agentic-Video-Editor-Starts-With-Source-Code",
+    "words": 1462,
+    "excerpt": [
+      "Coding agents edit code because code is text. Video projects are binary blobs that only Premiere and Resolve can open. No agent can read a .prproj file.",
+      "The answer is not a smarter agent. It is a different format. A video project written as source code, in plain React, where an agent edits video the same way it edits a web app."
+    ]
   }
 ];

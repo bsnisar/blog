@@ -55,22 +55,20 @@ export default async function SeriesPage({ params }: SeriesPageProps) {
 
   return (
     <section>
-      <p className="font-mono text-label tracking-label uppercase text-muted">
-        Series
-      </p>
-      <h1 className="mt-4 text-h1 tracking-h1">{series.title}</h1>
-      <p className="mt-4 max-w-measure text-title tracking-title text-muted">
+      <p className="text-label text-muted">Series</p>
+      <h1 className="mt-2 text-display tracking-display">{series.title}</h1>
+      <p className="mt-4 text-title text-muted">
         {series.description}
       </p>
 
-      <div className="mt-12 flex items-baseline justify-between border-b border-ink pb-3 font-mono text-label tracking-label uppercase text-muted">
+      <div className="mt-12 flex items-baseline justify-between pb-3 text-label text-muted">
         <span>Latest first</span>
         <span>
           {posts.length} {unitLabel(series, posts.length)}
         </span>
       </div>
 
-      <div className="mt-2">
+      <div>
         <PostList posts={newestFirst} rail="part" showSeries={false} />
       </div>
     </section>

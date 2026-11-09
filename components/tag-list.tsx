@@ -1,11 +1,7 @@
 import Link from 'next/link'
 import { tagSlug } from '@/lib/utils'
 
-/**
- * Tags read as data, so they sit in the mono register alongside dates.
- * A hairline box gives them a tap target without becoming a pill —
- * the system's corners stay square.
- */
+/** Tags as small grey typewriter labels, the way a manuscript is filed. */
 export function TagList({
   tags,
   className = '',
@@ -21,7 +17,7 @@ export function TagList({
         <li key={tag}>
           <Link
             href={`/tags/${tagSlug(tag)}`}
-            className="block border border-rule px-2 py-0.5 font-mono text-label tracking-label uppercase text-muted transition-colors hover:border-ink hover:text-ink"
+            className="block bg-raised px-2 py-0.5 font-sans text-label tracking-label lowercase text-muted hover:text-accent"
           >
             {tag}
           </Link>

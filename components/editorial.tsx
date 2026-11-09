@@ -5,16 +5,12 @@
  */
 
 /**
- * The standfirst: the argument stated before the evidence. Set larger than
- * body text and closed with a rule, so a reader who stops here still leaves
- * with the position.
+ * The opening: the argument stated before the evidence. It reads as the
+ * first paragraphs of the post, with no box or rule around it, so the home
+ * page excerpt and the page itself open the same way.
  */
 export function Lede({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="lede border-b border-ink pb-8 text-title tracking-title text-ink">
-      {children}
-    </div>
-  )
+  return <div className="lede">{children}</div>
 }
 
 /**
@@ -28,18 +24,9 @@ export function Coda({
   children: React.ReactNode
 }) {
   return (
-    <div className="mt-16 border-t border-ink pt-6">
-      <div className="coda max-w-measure text-title tracking-title text-ink">
-        {children}
-      </div>
-      {next ? (
-        <p className="mt-6 flex flex-wrap items-baseline gap-x-3">
-          <span className="font-mono text-label tracking-label uppercase text-faint">
-            Next
-          </span>
-          <span className="text-caption text-muted">{next}</span>
-        </p>
-      ) : null}
+    <div className="mt-14">
+      <div className="coda text-title italic text-ink">{children}</div>
+      {next ? <p className="mt-4 font-sans text-meta tracking-label text-muted">Next: {next}</p> : null}
     </div>
   )
 }

@@ -1,17 +1,30 @@
 import './global.css'
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
+import localFont from 'next/font/local'
+import { GeistSans } from 'geist/font/sans'
+import { IBM_Plex_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Navbar } from '@/components/nav'
 import { Footer } from '@/components/footer'
 import { baseUrl } from './sitemap'
 
-const plexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-plex-sans',
+/*
+ * CMU Serif, the Unicode build of Knuth's Computer Modern: the face of
+ * every LaTeX paper. SIL Open Font License; the files come from the
+ * computer-modern package on npm. Its 500 cut is the book weight, so it
+ * is declared as 400 to be what plain text uses.
+ */
+const cmuSerif = localFont({
+  src: [
+    { path: './fonts/cmu-serif-500-roman.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/cmu-serif-500-italic.woff2', weight: '400', style: 'italic' },
+    { path: './fonts/cmu-serif-700-roman.woff2', weight: '700', style: 'normal' },
+    { path: './fonts/cmu-serif-700-italic.woff2', weight: '700', style: 'italic' },
+  ],
+  variable: '--font-cmu',
   display: 'swap',
+  fallback: ['Georgia', 'Times New Roman', 'serif'],
 })
 
 const plexMono = IBM_Plex_Mono({
@@ -24,17 +37,15 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Bohdan Snisar — Founder, Engineer',
+    default: 'Bohdan Snisar',
     template: '%s | Bohdan Snisar',
   },
   description:
-    'Founder and AI architect writing about building products, mindset shifts, and the craft of creating in the era of LLMs.',
-  // No `alternates` here: page-level alternates replace rather than merge,
-  // so each page builds its own with lib/metadata's helper.
+    'Writing about building AI products, startup execution, and the mindset shift from engineer to founder.',
   openGraph: {
-    title: 'Bohdan Snisar — Insights on AI, Product Building, and Founder Mindset',
+    title: 'Bohdan Snisar',
     description:
-      'Sharp, practical writing on AI engineering, startup execution, and the mindset behind building meaningful products.',
+      'Writing about building AI products, startup execution, and the mindset shift from engineer to founder.',
     url: baseUrl,
     siteName: 'Bohdan Snisar',
     locale: 'en_US',
@@ -59,11 +70,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${plexSans.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${cmuSerif.variable} ${GeistSans.variable} ${plexMono.variable}`}>
       <body className="bg-paper text-ink antialiased">
-        <div className="mx-auto flex min-h-dvh max-w-shell flex-col px-5 pt-12 pb-16 sm:px-8">
+        <div className="mx-auto flex min-h-dvh max-w-shell flex-col px-5 pt-12 pb-12 sm:px-8 sm:pt-16">
           <Navbar />
-          <main className="flex-auto pt-12">{children}</main>
+          <main className="flex-auto pt-16 sm:pt-20">{children}</main>
           <Footer />
         </div>
         <Analytics />
