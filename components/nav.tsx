@@ -27,7 +27,7 @@ const iconLinks = [
 export function Navbar() {
   return (
     <header className="flex flex-col items-center text-center">
-      <Link href="/" aria-label="Bohdan Snisar, home" className="block">
+      <Link href="/about" aria-label="About Bohdan Snisar" title="About me" className="block">
         {AVATAR ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
