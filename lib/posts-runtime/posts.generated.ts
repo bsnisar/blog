@@ -91,5 +91,13 @@ export const ALL_POSTS: BlogPost[] = [
       "Coding agents edit code because code is text. Video projects are binary blobs that only Premiere and Resolve can open. No agent can read a .prproj file.",
       "The answer is not a smarter agent. It is a different format. A video project written as source code, in plain React, where an agent edits video the same way it edits a web app."
     ]
+  },
+  {
+    "slug": "AI-Accounting-Loss-And-The-Customer-Who-Pays",
+    "words": 211,
+    "excerpt": [
+      "Each layer of the AI supply chain buys an input and sells something more useful. The supplier's revenue becomes the next company's cost, yet each can earn a margin by changing what that input can do.",
+      "Nvidia captures the first margin by selling hardware above its production cost. Infrastructure providers spread that purchase across years of compute sales. Their economics depend on keeping the equipment busy long enough to recover the investment."
+    ]
   }
 ];

@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
 import type { ComponentPropsWithoutRef } from 'react'
 import { Coda, Lede } from '@/components/editorial'
+import { AIValueChain } from '@/components/ai-value-chain'
 import { XEmbed } from '@/components/x-embed'
 
 /** "01. Title" and "01 — Title", the two ways posts number their sections. */
@@ -27,6 +28,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Lede,
     Coda,
     XEmbed,
+    AIValueChain,
     h2: SectionHeading,
     ...components,
   }
