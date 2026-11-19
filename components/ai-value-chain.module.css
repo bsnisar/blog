@@ -1,0 +1,45 @@
+.figure {
+  --chart-blue: #2454d6;
+  --chart-cost: #d9dfe9;
+  margin-block: 2rem;
+  padding: 1.5rem;
+  background: #f7f9fc;
+  color: #14161a;
+  border-block: 1px solid #14161a;
+  font-variant-numeric: tabular-nums;
+}
+.header h3 { margin: 0; font-size: 1.5rem; line-height: 1.2; letter-spacing: -.025em; }
+.header p { margin: .75rem 0 0; font-size: .9375rem; line-height: 1.5; color: #4a5361; }
+.legend { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-block: 1.5rem; font-size: .75rem; line-height: 1.5; }
+.legend span { display: flex; align-items: center; gap: .5rem; }
+.legend i { width: .625rem; height: .625rem; }
+.blueKey { background: var(--chart-blue); }
+.grayKey { background: var(--chart-cost); border: 1px solid #8993a4; }
+.stage { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 1.5rem; padding-block: 1.5rem; border-top: 1px solid #c9d0db; }
+.identity { display: flex; gap: .75rem; align-items: baseline; }
+.step { color: #4a5361; font-size: .75rem; font-family: var(--font-mono); }
+.identity h4 { margin: 0; font-size: 1rem; line-height: 1.3; }
+.identity p { margin: .5rem 0 0; color: #4a5361; font-size: .8125rem; line-height: 1.5; }
+.metric { display: flex; align-items: baseline; flex-wrap: wrap; gap: .25rem .75rem; margin-bottom: .75rem; }
+.metric strong { font-size: 2.25rem; line-height: 1; letter-spacing: -.03em; font-weight: 600; }
+.metric span { font-size: .8125rem; line-height: 1.4; }
+.bar { display: flex; height: 1rem; width: 100%; }
+.retained { background: var(--chart-blue); }
+.cost { background: var(--chart-cost); }
+.barLabels { display: flex; justify-content: space-between; gap: .75rem; margin-top: .5rem; font-size: .75rem; line-height: 1.5; }
+.barLabels span:last-child { text-align: right; color: #4a5361; }
+.economics { margin: .75rem 0 0; color: #4a5361; font-size: .8125rem; line-height: 1.55; }
+.secondMetric { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; margin: 1rem 0 .75rem; font-size: .8125rem; }
+.secondMetric strong { font-size: 1.5rem; line-height: 1; }
+.range { display: flex; align-items: center; gap: .75rem; font-size: .8125rem; margin-block: 1rem; }
+.rangeLine { flex: 1; height: .5rem; border-inline: 1px solid var(--chart-blue); position: relative; }
+.rangeLine::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--chart-blue); }
+.caption { border-top: 1px solid #c9d0db; padding-top: 1rem; color: #4a5361; font-size: .75rem; line-height: 1.55; }
+.caption p { margin: 0; }
+.caption p + p { margin-top: .75rem; }
+@media (max-width: 600px) {
+  .figure { padding: 1.25rem; }
+  .stage { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .identity p { margin-top: .25rem; }
+  .metric strong { font-size: 2rem; }
+}

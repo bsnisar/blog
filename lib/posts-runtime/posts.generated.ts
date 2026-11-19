@@ -33,5 +33,8 @@ export const ALL_POSTS: BlogPost[] = [
   },
   {
     "slug": "Autonomous-Agents-Need-Constitutions-Not-Bigger-Contexts"
+  },
+  {
+    "slug": "AI-Accounting-Loss-And-The-Customer-Who-Pays"
   }
 ];

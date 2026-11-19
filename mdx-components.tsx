@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types'
 import { Coda, Lede } from '@/components/editorial'
+import { AIValueChain } from '@/components/ai-value-chain'
 import { XEmbed } from '@/components/x-embed'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -7,6 +8,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Lede,
     Coda,
     XEmbed,
+    AIValueChain,
     ...components,
   }
 }
