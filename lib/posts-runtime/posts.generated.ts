@@ -13,7 +13,7 @@ export type BlogPost = {
 export const ALL_POSTS: BlogPost[] = [
   {
     "slug": "Why-I-Want-3D-In-The-Same-File-As-The-Video",
-    "words": 1705,
+    "words": 1717,
     "excerpt": [
       "I started UberScene because I wanted a video-editing skill for an agent. I know firsthand that agents work better with code than with ffmpeg commands. They can read a component, change a parameter, reuse a function, and reason about the surrounding structure. Representing a video as a TSX file gave them something they could work with."
     ]
