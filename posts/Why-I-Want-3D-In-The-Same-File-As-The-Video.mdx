@@ -1,0 +1,132 @@
+export const metadata = {
+  title: "Why I want 3D in the same file as the video",
+  publishedAt: '2026-11-19',
+  description: "Keeping rough 3D scenes alongside a TSX video edit could let agents export camera paths and structural guidance for generative video, then revise both from the same source.",
+  series: { slug: 'opinionated-ai', part: 6 },
+  tags: ['AI', 'Agents', 'Video', 'Open Source', 'Engineering'],
+};
+
+<Lede>
+I started [UberScene](https://uberscene.prefixtree.xyz/) because I wanted a video editing skill for an agent. I know how much better an agent works with code than with ffmpeg commands. An agent can read a component, change a parameter, re-use a function and reason about the surrounding structure. Representing a video as a TSX file was the thing that gave them something to work with.
+
+We're building [Cutleap](https://cutleap.com) (our agentic video editor) on top of UberScene. The next step is to extend that representation to the rough 3D scenes that are used to guide the generative video models.
+</Lede>
+
+Imagine a five-second shot of a person walking behind a table while the camera moves sideways. A prompt can describe it. A rough 3D animation can specify where the table stands, when the person crosses behind it, and how the camera moves throughout the shot. Those are different kinds of information, and they need different routes into a model.
+
+I want to keep those decisions editable alongside the rest of the video. To use them as model guidance, we need to understand which inputs the generator accepts and what each input can control.
+
+## How a video model makes a clip
+
+Diffusion and flow-based video generators typically start with noise and repeatedly transform it into a video representation. Text, reference images, and other supported inputs influence that process. The model usually works in a compressed latent space rather than directly manipulating every output pixel.
+
+It predicts visual relationships across time as well as within individual frames. That can produce convincing movement, but it does not mean the model has constructed an explicit scene with persistent objects and an editable camera.
+
+A generated table is not necessarily a mesh. A generated camera move is not necessarily a trajectory that you could recover and replay exactly. The result can look spatially plausible while changing the geometry along the way.
+
+The model and inference pipeline also have temporal limits. Longer output may require extension or multiple generation windows. The exact frame counts vary by model; a five-second limit is not a universal law. For an editing system, the consequence is that a continuous timeline must be translated into the durations, frame rates, and conditioning formats a particular generator accepts.
+
+A model can only use a control signal through an interface it supports. Adding camera coordinates to a text prompt does not create camera conditioning. Uploading a depth image to an ordinary image-reference slot does not guarantee that it will be interpreted as depth.
+
+## Four ways to steer the result
+
+Each route controls different aspects of the output; their relative usefulness depends on the shot.
+
+### Text describes the shot
+
+Text is the easiest place to specify subject, action, atmosphere, and visual style. It is also convenient for revisions: make the room colder, slow the movement, change the time of day.
+
+It is less useful for exact spatial relationships. "Move the camera slightly left" leaves the distance, speed, orientation, and relationship to the subject open to interpretation. A longer prompt can add detail, but it still asks the model to interpret language.
+
+For many shots, that freedom is useful. It becomes expensive when a specific crossing, reveal, or composition must happen at a particular moment.
+
+### Camera conditioning supplies a trajectory
+
+Research systems such as [CameraCtrl](https://arxiv.org/abs/2404.02101) introduce dedicated camera conditioning. This is a different interface from asking for a dolly move in prose: a trained camera-control mechanism receives a representation of the desired camera motion.
+
+An exporter must translate the sampled three.js camera path into the representation and conventions the generator expects.
+
+A trajectory also leaves much unspecified. Knowing where the camera goes does not determine the room, the subject's identity, or the subject's actions. Exact input numbers do not make the resulting video an exact render.
+
+### Control passes describe visible structure
+
+A scene can also be rendered into depth, edges, masks, or projected body keypoints. Each pass removes some information and retains something useful: distance, boundaries, regions, or articulation.
+
+[Wan VACE's documented interfaces](https://huggingface.co/docs/diffusers/main/api/pipelines/wan) include control-to-video inputs such as depth, pose, sketch, flow, and layout. Support for each control depends on the model and pipeline.
+
+Moving an object in the scene changes its depth, silhouette, and occlusion across the whole shot. Several synchronized guidance streams can come from one scene.
+
+Those streams leave out identity, clothing, and the intended mood. A depth pass cannot identify a particular person, and an edge map cannot explain why a pause should feel uncomfortable. Prompts and appearance references still have work to do.
+
+### Video-to-video supplies an existing appearance and motion
+
+A rendered preview gives the generator a complete sequence of images. In workflows that support video transformation, that sequence can provide a starting structure to restyle or reinterpret.
+
+The underlying trade-off has a useful precedent in [SDEdit](https://sde-image-editing.github.io/), which adds noise to an input image before denoising it. Its image-editing method illustrates the tension between preserving an input and allowing a generative prior to change it. Video systems have different implementations; their controls should be checked individually.
+
+A rough 3D preview contains both useful layout and unwanted placeholder appearance. A workflow may preserve too much of the flat materials, or change enough of the image that spatial details drift. A rendered preview is worth exporting, but it should not be treated as a guaranteed structure-preserving interface.
+
+## What a rough 3D scene controls
+
+A blockout gives the author an explicit description of geometry and timing. The author can inspect a camera path, move a table, or change the moment a character disappears behind a wall. Those decisions exist before generation and survive as editable source afterward, even when the model fails to follow them.
+
+[PrevizWhiz](https://arxiv.org/html/2602.03838v1), a CHI 2026 research system, is a useful example. It combines rough 3D scenes with video guidance in a browser interface built with React and React Three Fiber. Its sample furniture includes basic box geometry, alongside imported assets. It also uses reference-video processing for more detailed motion guidance.
+
+Participants found camera and character motion guidance helpful. Agreement that generated content matched their imagination had a median of three out of five, so useful motion guidance still left room for a mismatch with the intended shot.
+
+Recent work also explores the Blender route. The [MAVE abstract](https://arxiv.org/abs/2611.22464) describes reconstructing editable Blender blockouts from film shots and rendering them to condition video generation. I have checked the abstract, but have not independently evaluated the system or established its production reliability.
+
+My working hypothesis is that overly crude geometry can preserve the wrong structure. A placeholder box may constrain the wrong silhouette, while a crude body may omit articulation that matters to the action. We need experiments with the actual model and control settings to establish how geometry quality affects guidance.
+
+## Why keep the blockout in code?
+
+Blender is a serious option here. It has mature modeling, rigging, animation, and scene-inspection tools. It is also programmable through Python. A comparison framed as "code versus Blender" can obscure the fact that both routes can be driven by an agent.
+
+I am interested in three.js because it fits the representation UberScene already uses. The edit and the 3D scene both need a timeline. If the same file controls both, changing a shot's duration can also change the camera animation and the frames exported for guidance. A reusable function can position assets or describe a camera move. The agent can inspect those relationships together.
+
+UberScene already has a small version of this. Its `<Three>` element runs a three.js scene on the video's clock. Here is an excerpt from the existing showcase:
+
+```tsx
+<Three
+  id="cube"
+  anchor="shot"
+  duration={3}
+  camera={{ position: [0, 0, 5], fov: 40 }}
+  setup={({ scene, THREE }) => {
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(1.6, 1.6, 1.6),
+      new THREE.MeshNormalMaterial(),
+    );
+    scene.add(cube);
+    return ({ time }) => {
+      cube.rotation.set(time * 0.6, time, 0);
+    };
+  }}
+/>
+```
+
+The update function calculates rotation from the layer's time, so seeking to a moment can produce the corresponding pose without replaying the preceding animation. That is the pattern a camera path or a moving prop would need too.
+
+This example renders a cube. It does not demonstrate an existing depth exporter, pose pipeline, or video-model integration. Those are additional capabilities to build.
+
+I also do not have a controlled benchmark showing that agents make better blockouts with three.js than with Blender's Python API. Results from different code-generation studies cannot establish that comparison. The claim I can make is narrower: a TSX scene lets an agent work within the same language and document structure as the edit.
+
+A scene can execute successfully and still have bad composition, incorrect scale, or an obstructed camera. Agents need rendered feedback, and people need a way to inspect and adjust the scene. And for character work, a practical asset and animation workflow matters much more than how short the scene code looks.
+
+## What UberScene would need to build
+
+I would start with a guidance exporter for a small set of supported inputs.
+
+The exporter needs an explicit shot contract: duration, frame rate, resolution, camera, asset versions, and the time samples used for every output. A preview and a depth sequence that differ by one frame can describe different events at an occlusion boundary.
+
+It also needs model-specific output adapters. A depth image needs a defined interpretation, including range and normalization. A camera export needs documented coordinates and projection conventions. Masks need stable object identifiers. These details should be validated at the boundary, where an exporter can report an unsupported format or mismatched frame count.
+
+Character guidance needs real assets. Loading a rigged character is only part of the work. Producing a pose pass requires mapping its bones to the target keypoint convention, projecting them through the camera, and handling visibility according to the receiving workflow. Reusable rigs and motion clips would make this much more useful than asking an agent to construct a person from primitives.
+
+Renders need reproducible inputs and a controlled environment. Time-based updates help, but random values, asynchronous loading, physics, and rendering differences can still affect results. The system should record enough information to reproduce an export and compare it with later revisions.
+
+We then need to evaluate the workflow. Start with a few shots containing measurable requirements: a camera endpoint, a crossing time, an object that must remain visible. Compare text-only generation with camera guidance, control passes, and preview-video guidance where the chosen model supports them. Measure adherence as well as judging appearance, and retain failed outputs for comparison.
+
+Interoperability belongs in that plan too. Exporting assets and supported animation through formats such as glTF would let someone continue working in Blender. A shared timeline does not require every authoring task to happen in TSX.
+
+The file that defines the edit could also define a rough scene, sample its camera, and render guidance for a generated shot. When the result needs revision, the agent could change a camera path or a crossing time in that source and regenerate the shot. The generated clip would return to the same editing timeline.
