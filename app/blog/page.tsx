@@ -11,13 +11,13 @@ export const metadata = {
 export default function Page() {
   return (
     <section>
-      <h1 className="text-h1 tracking-h1">Writing</h1>
-      <p className="mt-4 max-w-measure text-title tracking-title text-muted">
+      <h1 className="text-display tracking-display">Writing</h1>
+      <p className="mt-4 text-title text-muted">
         On AI engineering, startup execution, and the mental models that decide
         whether a company survives its founders.
       </p>
 
-      <div className="mt-12 border-t border-ink pt-2">
+      <div className="mt-12">
         <BlogPosts />
       </div>
     </section>

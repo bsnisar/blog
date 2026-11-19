@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const withMDX = require('@next/mdx')({
   options: {
-    remarkPlugins: ["remark-gfm"],
+    // smartypants turns straight quotes and -- into curly quotes and dashes,
+    // leaving code untouched.
+    remarkPlugins: ["remark-gfm", "remark-smartypants"],
   },
 })
 

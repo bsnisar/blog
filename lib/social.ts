@@ -34,3 +34,10 @@ export const SOCIAL: SocialLink[] = [
 ];
 
 export const FOLLOW_LINKS = SOCIAL.filter((link) => link.follow);
+
+/**
+ * The round photo at the top of every page. Put a square photo at
+ * public/avatar.jpg and set this to "/avatar.jpg"; until then the circle
+ * shows initials.
+ */
+export const AVATAR: string | null = null;

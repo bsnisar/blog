@@ -1,12 +1,8 @@
 import type { Metadata } from 'next'
 import nextDynamic from 'next/dynamic'
 import { ALL_POSTS } from '@/lib/posts-runtime/posts.generated'
-import {
-  formatDate,
-  formatDateNumeric,
-  getBlogPostMetadata,
-  getSeriesContext,
-} from '@/lib/utils'
+import { getBlogPostMetadata, getSeriesContext } from '@/lib/utils'
+import { PostMeta } from '@/components/post-meta'
 import { getSeries } from '@/lib/series'
 import { SeriesBadge, SeriesNav } from '@/components/series-parts'
 import { TagList } from '@/components/tag-list'
@@ -86,9 +82,13 @@ export default async function BlogPage({ params }: BlogPageProps) {
         }}
       />
 
-      <header className="max-w-measure">
+      <header>
+        <h1 className="text-[2.375rem] leading-[1.12] font-normal sm:text-h1">{metadata.title}</h1>
+
+        <PostMeta post={post} className="mt-3" />
+
         {series && metadata.series && seriesContext ? (
-          <div className="mb-4">
+          <div className="mt-2">
             <SeriesBadge
               series={series}
               part={metadata.series.part}
@@ -97,21 +97,10 @@ export default async function BlogPage({ params }: BlogPageProps) {
           </div>
         ) : null}
 
-        <h1 className="text-h1 tracking-h1">{metadata.title}</h1>
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-rule pb-4">
-          <time
-            dateTime={metadata.publishedAt}
-            title={formatDate(metadata.publishedAt)}
-            className="font-mono text-label tracking-label uppercase text-muted"
-          >
-            {formatDateNumeric(metadata.publishedAt)}
-          </time>
-          <TagList tags={metadata.tags ?? []} />
-        </div>
+        <TagList tags={metadata.tags ?? []} className="mt-5" />
       </header>
 
-      <div className="article mt-10">
+      <div className="article mt-8">
         <Post />
       </div>
 
