@@ -1,45 +1,36 @@
 .figure {
-  --chart-blue: #2454d6;
-  --chart-cost: #d9dfe9;
-  margin-block: 2rem;
-  padding: 1.5rem;
-  background: #f7f9fc;
-  color: #14161a;
-  border-block: 1px solid #14161a;
+  width: min(60rem, calc(100vw - 3rem));
+  margin-inline: calc((100% - min(60rem, 100vw - 3rem)) / 2);
+  margin-block: 2.5rem;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   font-variant-numeric: tabular-nums;
 }
-.header h3 { margin: 0; font-size: 1.5rem; line-height: 1.2; letter-spacing: -.025em; }
-.header p { margin: .75rem 0 0; font-size: .9375rem; line-height: 1.5; color: #4a5361; }
-.legend { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-block: 1.5rem; font-size: .75rem; line-height: 1.5; }
-.legend span { display: flex; align-items: center; gap: .5rem; }
-.legend i { width: .625rem; height: .625rem; }
-.blueKey { background: var(--chart-blue); }
-.grayKey { background: var(--chart-cost); border: 1px solid #8993a4; }
-.stage { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 1.5rem; padding-block: 1.5rem; border-top: 1px solid #c9d0db; }
-.identity { display: flex; gap: .75rem; align-items: baseline; }
-.step { color: #4a5361; font-size: .75rem; font-family: var(--font-mono); }
-.identity h4 { margin: 0; font-size: 1rem; line-height: 1.3; }
-.identity p { margin: .5rem 0 0; color: #4a5361; font-size: .8125rem; line-height: 1.5; }
-.metric { display: flex; align-items: baseline; flex-wrap: wrap; gap: .25rem .75rem; margin-bottom: .75rem; }
-.metric strong { font-size: 2.25rem; line-height: 1; letter-spacing: -.03em; font-weight: 600; }
-.metric span { font-size: .8125rem; line-height: 1.4; }
-.bar { display: flex; height: 1rem; width: 100%; }
-.retained { background: var(--chart-blue); }
-.cost { background: var(--chart-cost); }
-.barLabels { display: flex; justify-content: space-between; gap: .75rem; margin-top: .5rem; font-size: .75rem; line-height: 1.5; }
-.barLabels span:last-child { text-align: right; color: #4a5361; }
-.economics { margin: .75rem 0 0; color: #4a5361; font-size: .8125rem; line-height: 1.55; }
-.secondMetric { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; margin: 1rem 0 .75rem; font-size: .8125rem; }
-.secondMetric strong { font-size: 1.5rem; line-height: 1; }
-.range { display: flex; align-items: center; gap: .75rem; font-size: .8125rem; margin-block: 1rem; }
-.rangeLine { flex: 1; height: .5rem; border-inline: 1px solid var(--chart-blue); position: relative; }
-.rangeLine::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--chart-blue); }
-.caption { border-top: 1px solid #c9d0db; padding-top: 1rem; color: #4a5361; font-size: .75rem; line-height: 1.55; }
-.caption p { margin: 0; }
-.caption p + p { margin-top: .75rem; }
-@media (max-width: 600px) {
-  .figure { padding: 1.25rem; }
-  .stage { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .identity p { margin-top: .25rem; }
-  .metric strong { font-size: 2rem; }
+.header { margin-bottom: 1.5rem; }
+.header h3 { margin: 0; font-family: var(--font-sans); font-size: var(--text-title); font-weight: 500; line-height: 1.25; }
+.header p { margin: .5rem 0 0; color: var(--color-muted); font-size: var(--text-meta); line-height: 1.5; }
+.chain { display: flex; flex-direction: row-reverse; gap: 1.75rem; }
+.stage { flex: 1; min-width: 0; position: relative; padding: 1.5rem .75rem; border-block: 1px solid var(--color-rule); text-align: center; }
+.stage h4 { margin: 0; font-family: var(--font-sans); font-size: var(--text-caption); font-weight: 600; line-height: 1.4; }
+.product { min-height: 2.75rem; margin: .5rem 0 0; color: var(--color-muted); font-size: var(--text-label); line-height: 1.4; }
+.revenue { margin-block: 1.5rem; }
+.revenue strong { display: block; font-size: 2.5rem; font-weight: 500; line-height: 1.15; letter-spacing: -.03em; }
+.revenue span { display: block; margin-top: .5rem; color: var(--color-muted); font-size: var(--text-label); }
+.margin { margin: 0; font-size: var(--text-caption); font-weight: 500; line-height: 1.4; }
+.detail { margin: .5rem 0 0; font-size: var(--text-label); line-height: 1.5; color: var(--color-muted); }
+.note { margin: 1rem 0 0; font-size: var(--text-label); line-height: 1.5; color: var(--color-muted); }
+.arrow { position: absolute; left: -1.625rem; top: 46%; color: var(--color-muted); }
+.caption { margin-top: 1rem; color: var(--color-muted); font-size: var(--text-label); line-height: 1.55; }
+@media (max-width: 740px) {
+  .figure { width: 100%; margin-inline: 0; }
+  .chain { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 1rem; }
+  .stage { padding: 1.25rem .25rem; }
+  .arrow { display: none; }
+  .revenue strong { font-size: 2rem; }
+  .margin { font-size: var(--text-meta); }
 }
+/* Prose justification must not spread short diagram labels. */
+.figure p { text-align: center; hyphens: none; }
+.figure .header p { text-align: left; }
+.revenue strong { white-space: nowrap; font-size: 2rem; }
+.caption { text-align: left; hyphens: none; }
